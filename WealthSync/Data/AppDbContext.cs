@@ -9,5 +9,8 @@ namespace WealthSync.Data
         public AppDbContext(DbContextOptions options) : base(options)
         {
         }
+
+        public DbSet<Saving> Savings { get; set; }
+        public DbSet<Contribution> Contributions { get; set; }
     }
 }
