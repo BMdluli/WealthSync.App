@@ -4,7 +4,6 @@
     {
         public int Id { get; set; }
         public double Amount { get; set; }
-        public string icon { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
         public int SavingId { get; set; }
