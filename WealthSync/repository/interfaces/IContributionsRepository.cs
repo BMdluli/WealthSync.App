@@ -1,5 +1,5 @@
 using WealthSync.Data;
-using WealthSync.Models;
+using WealthSync.Dtos;
 
 namespace WealthSync.repository.interfaces;
 

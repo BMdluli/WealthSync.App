@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using WealthSync.Data;
-using WealthSync.Models;
+using WealthSync.Dtos;
 using WealthSync.repository.interfaces;
 
 namespace WealthSync.Controllers

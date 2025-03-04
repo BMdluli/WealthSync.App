@@ -38,6 +38,7 @@ namespace WealthSync.repository
             {
                 Name = createSavings.Name,
                 Amount = createSavings.Amount,
+                Icon = createSavings.Icon,
                 AppUser = user,
             };
 

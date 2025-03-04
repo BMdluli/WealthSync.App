@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using WealthSync.Data;
-using WealthSync.Models;
+using WealthSync.Dtos;
 using WealthSync.repository.interfaces;
 
 namespace WealthSync.repository;
@@ -34,7 +34,6 @@ public class ContributionRepository: IContributionsRepository
         var contributionToSave = new Contribution
         {
             Amount = contributionDto.Amount,
-            icon = contributionDto.icon,
             SavingId = saving.Id
         };
         
@@ -68,7 +67,6 @@ public class ContributionRepository: IContributionsRepository
         var contributionToSave = new Contribution
         {
             Amount = -contributionDto.Amount,
-            icon = contributionDto.icon,
             SavingId = saving.Id
         };
         
