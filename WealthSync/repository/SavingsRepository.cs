@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
+using AutoMapper;
 using WealthSync.Data;
 using WealthSync.Dtos;
 using WealthSync.Models;
@@ -13,12 +14,14 @@ namespace WealthSync.repository
 
         private readonly AppDbContext _context;
         private readonly UserManager<AppUser> _userManager;
+        private readonly IMapper _mapper;
 
 
-        public SavingsRepository(AppDbContext context, UserManager<AppUser> userManager) 
+        public SavingsRepository(AppDbContext context, UserManager<AppUser> userManager, IMapper mapper) 
         {
             _context = context; 
             _userManager = userManager;
+            _mapper = mapper;
         }
 
         public async Task<bool> CreateSavingsAsync(CreateSavingsDto createSavings, string userId)
@@ -65,11 +68,14 @@ namespace WealthSync.repository
             return false;
         }
 
-        public async Task<IReadOnlyCollection<Saving>> GetSavingsAsync(string userId)
+        public async Task<IReadOnlyCollection<SavingsDto>> GetSavingsAsync(string userId)
         {
-            return await _context.Savings
+            var savings = await _context.Savings
                 .Include(c => c.Contributions)
                 .ToListAsync();
+
+            return _mapper.Map<List<SavingsDto>>(savings);
+
         }
 
         public async  Task<SavingsDto?> GetSavingsByIdAsync(int id, string userId)
@@ -83,16 +89,20 @@ namespace WealthSync.repository
                 return null;
             }
 
-            return new SavingsDto
-            {
-                Id = id,
-                Name = saving.Name,
-                Amount = saving.Amount,
-                CreatedAt = saving.CreatedAt,
-
-                Contributions = saving.Contributions,
-            };
+            // return new SavingsDto
+            // {
+            //     Id = id,
+            //     Name = saving.Name,
+            //     Amount = saving.Amount,
+            //     CreatedAt = saving.CreatedAt,
+            //     Contributions = _mapper.Map<List<ContributionDto>>(saving.Contributions)
+            // };
+            
+            return _mapper.Map<SavingsDto>(saving);
+            
+            
 
         }
     }
 }
+

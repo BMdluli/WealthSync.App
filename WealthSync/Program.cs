@@ -91,8 +91,12 @@ builder.Services.AddAuthentication(options =>
         };
     });
 
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
 // repos
 builder.Services.AddScoped<ISavingsRepository, SavingsRepository>();
+builder.Services.AddScoped<IContributionsRepository, ContributionRepository>();
+
 
 
 var app = builder.Build();

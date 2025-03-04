@@ -9,7 +9,7 @@ namespace WealthSync.Dtos
         public string Name { get; set; }
         public double Amount { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-        public List<Contribution> Contributions { get; set; }
+        public List<ContributionDto> Contributions { get; set; }
 
         public string AppUserId { get; set; }
     }
