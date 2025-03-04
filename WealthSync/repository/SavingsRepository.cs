@@ -49,14 +49,34 @@ namespace WealthSync.repository
 
         }
 
-        public async Task<IReadOnlyCollection<Saving>> GetSavingsAsync()
+        public async Task<bool> DeleteSavingsAsync(int id, string userId)
         {
-            return await _context.Savings.ToListAsync();
+            var savings = await _context.Savings.FindAsync(id);
+            
+            if (savings == null) return false;
+
+            _context.Remove(savings);
+
+            if (await _context.SaveChangesAsync() > 0)
+            {
+                return true;
+            }
+            
+            return false;
         }
 
-        public async  Task<SavingsDto?> GetSavingsByIdAsync(int id)
+        public async Task<IReadOnlyCollection<Saving>> GetSavingsAsync(string userId)
         {
-           var saving = await _context.Savings.FirstOrDefaultAsync(x => x.Id == id);
+            return await _context.Savings
+                .Include(c => c.Contributions)
+                .ToListAsync();
+        }
+
+        public async  Task<SavingsDto?> GetSavingsByIdAsync(int id, string userId)
+        {
+           var saving = await _context.Savings
+               .Include(c => c.Contributions)
+               .FirstOrDefaultAsync(x => x.Id == id);
 
             if (saving == null)
             {
