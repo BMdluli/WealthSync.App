@@ -6,17 +6,21 @@ namespace WealthSync.Data
     public class Saving
     {
         public int Id { get; set; }
+
+        [Required]
+        public string AppUserId { get; set; }
+        public AppUser AppUser { get; set; }
+
         [Required]
         public string Name { get; set; }
-        [Required]
-        [Range(1, double.MaxValue)]
-        public double Amount { get; set; }
-        [Required]
-        public string Icon { get; set; }
-        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+        
+        public double TargetAmount { get; set; }
+        
+        public double CurrentAmount { get; set; }
 
-        public List<Contribution> Contributions { get; set; }
+        public DateTime StartDate { get; set; }
+        public DateTime? TargetDate { get; set; }
 
-        public AppUser AppUser { get; set; }
+        public ICollection<Contribution> Contributions { get; set; }
     }
 }

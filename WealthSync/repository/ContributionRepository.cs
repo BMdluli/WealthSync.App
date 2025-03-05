@@ -1,11 +1,11 @@
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using WealthSync.Data;
-using WealthSync.Dtos;
 using WealthSync.repository.interfaces;
 
-namespace WealthSync.repository;
-
-public class ContributionRepository: IContributionsRepository
+public class ContributionRepository : IContributionsRepository
 {
     private readonly AppDbContext _context;
 
@@ -13,71 +13,79 @@ public class ContributionRepository: IContributionsRepository
     {
         _context = context;
     }
-    
-    public async Task<bool> AddContributionAsync(CreateContributionDto contributionDto, string userId)
+
+    public async Task<IEnumerable<Contribution>> GetAllAsync()
     {
-        var saving = await _context.Savings
-            .Include(a => a.AppUser)
-            .FirstOrDefaultAsync(x => x.Id == contributionDto.SavingId);
-
-        if (saving == null)
-        {
-            return false;
-        }
-        
-        // CHECK IF USER INDEED OWNS saving
-        if (userId != saving.AppUser.Id)
-        {
-            return false;
-        }
-
-        var contributionToSave = new Contribution
-        {
-            Amount = contributionDto.Amount,
-            SavingId = saving.Id
-        };
-        
-        await _context.Contributions.AddAsync(contributionToSave);
-
-        if (await _context.SaveChangesAsync() > 0)
-        {
-            return true;
-        }
-        
-        return false;
+        return await _context.Contributions
+            .Include(c => c.Saving)
+            .ToListAsync();
     }
 
-    public async Task<bool> RemoveContributionAsync(CreateContributionDto contributionDto, string userId)
+    public async Task<Contribution> GetByIdAsync(int id)
     {
-        var saving = await _context.Savings
-            .Include(a => a.AppUser)
-            .FirstOrDefaultAsync(x => x.Id == contributionDto.SavingId);
-
-        if (saving == null)
-        {
-            return false;
-        }
-        
-        // CHECK IF USER INDEED OWNS saving
-        if (userId != saving.AppUser.Id)
-        {
-            return false;
-        }
-
-        var contributionToSave = new Contribution
-        {
-            Amount = -contributionDto.Amount,
-            SavingId = saving.Id
-        };
-        
-        await _context.Contributions.AddAsync(contributionToSave);
-
-        if (await _context.SaveChangesAsync() > 0)
-        {
-            return true;
-        }
-        
-        return false;
+        return await _context.Contributions
+            .Include(c => c.Saving)
+            .FirstOrDefaultAsync(c => c.Id == id);
     }
-    
+
+    public async Task<Contribution> GetByIdForUserAsync(int id, string userId)
+    {
+        return await _context.Contributions
+            .Include(c => c.Saving)
+            .FirstOrDefaultAsync(c => c.Id == id && c.Saving.AppUserId == userId);
+    }
+
+    public async Task<IEnumerable<Contribution>> GetBySavingsGoalIdAsync(int savingsGoalId, string userId)
+    {
+        return await _context.Contributions
+            .Include(c => c.Saving)
+            .Where(c => c.SavingsGoalId == savingsGoalId && c.Saving.AppUserId == userId)
+            .ToListAsync();
+    }
+
+    public async Task AddAsync(Contribution entity)
+    {
+        _context.Contributions.Add(entity);
+        // Update Saving.CurrentAmount
+        var goal = await _context.Savings.FindAsync(entity.SavingsGoalId);
+        if (goal != null)
+        {
+            goal.CurrentAmount += entity.Amount;
+            _context.Entry(goal).State = EntityState.Modified;
+        }
+        await _context.SaveChangesAsync();
+    }
+
+    public async Task UpdateAsync(Contribution entity)
+    {
+        // Adjust Saving.CurrentAmount based on the difference
+        var original = await _context.Contributions.AsNoTracking()
+            .FirstOrDefaultAsync(c => c.Id == entity.Id);
+        var goal = await _context.Savings.FindAsync(entity.SavingsGoalId);
+        if (original != null && goal != null)
+        {
+            goal.CurrentAmount = goal.CurrentAmount - original.Amount + entity.Amount;
+            _context.Entry(goal).State = EntityState.Modified;
+        }
+        _context.Entry(entity).State = EntityState.Modified;
+        await _context.SaveChangesAsync();
+    }
+
+    public async Task DeleteAsync(Contribution entity)
+    {
+        // Subtract from Saving.CurrentAmount
+        var goal = await _context.Savings.FindAsync(entity.SavingsGoalId);
+        if (goal != null)
+        {
+            goal.CurrentAmount -= entity.Amount;
+            _context.Entry(goal).State = EntityState.Modified;
+        }
+        _context.Contributions.Remove(entity);
+        await _context.SaveChangesAsync();
+    }
+
+    public async Task<bool> ExistsAsync(int id)
+    {
+        return await _context.Contributions.AnyAsync(c => c.Id == id);
+    }
 }

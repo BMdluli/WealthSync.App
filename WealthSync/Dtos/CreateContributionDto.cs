@@ -4,7 +4,10 @@ namespace WealthSync.Dtos;
 
 public class CreateContributionDto
 {
-    [Range(1, double.MaxValue)]
+    [Required]
+    public int SavingsGoalId { get; set; }
+    [Required]
+    [Range(0, double.MaxValue)]
     public double Amount { get; set; }
-    public int SavingId { get; set; }
+    public string Description { get; set; }
 }

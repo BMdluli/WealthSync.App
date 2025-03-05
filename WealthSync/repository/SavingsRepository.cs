@@ -1,109 +1,66 @@
-﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
-using System.Security.Claims;
-using AutoMapper;
+﻿using Microsoft.EntityFrameworkCore;
+
 using WealthSync.Data;
-using WealthSync.Dtos;
-using WealthSync.Models;
 using WealthSync.repository.interfaces;
 
-namespace WealthSync.repository
+public class SavingsRepository : ISavingsRepository
 {
-    public class SavingsRepository : ISavingsRepository
+    private readonly AppDbContext _context;
+
+    public SavingsRepository(AppDbContext context)
     {
+        _context = context;
+    }
 
-        private readonly AppDbContext _context;
-        private readonly UserManager<AppUser> _userManager;
-        private readonly IMapper _mapper;
+    public async Task<IEnumerable<Saving>> GetAllAsync()
+    {
+        return await _context.Savings
+            .Include(s => s.Contributions)
+            .ToListAsync();
+    }
 
+    public async Task<Saving> GetByIdAsync(int id)
+    {
+        return await _context.Savings
+            .Include(s => s.Contributions)
+            .FirstOrDefaultAsync(s => s.Id == id);
+    }
 
-        public SavingsRepository(AppDbContext context, UserManager<AppUser> userManager, IMapper mapper) 
-        {
-            _context = context; 
-            _userManager = userManager;
-            _mapper = mapper;
-        }
+    public async Task<Saving> GetByIdForUserAsync(int id, string userId)
+    {
+        return await _context.Savings
+            .Include(s => s.Contributions)
+            .FirstOrDefaultAsync(s => s.Id == id && s.AppUserId == userId);
+    }
 
-        public async Task<bool> CreateSavingsAsync(CreateSavingsDto createSavings, string userId)
-        {
-            Console.WriteLine(userId);
-            var user = await _userManager.FindByIdAsync(userId);
+    public async Task<IEnumerable<Saving>> GetByUserIdAsync(string userId)
+    {
+        return await _context.Savings
+            .Include(s => s.Contributions)
+            .Where(s => s.AppUserId == userId)
+            .ToListAsync();
+    }
 
-            if (user == null)
-            {
-                return false;
-            }
+    public async Task AddAsync(Saving entity)
+    {
+        _context.Savings.Add(entity);
+        await _context.SaveChangesAsync();
+    }
 
-            var saving = new Saving
-            {
-                Name = createSavings.Name,
-                Amount = createSavings.Amount,
-                Icon = createSavings.Icon,
-                AppUser = user,
-            };
+    public async Task UpdateAsync(Saving entity)
+    {
+        _context.Entry(entity).State = EntityState.Modified;
+        await _context.SaveChangesAsync();
+    }
 
-            await _context.AddAsync(saving);
+    public async Task DeleteAsync(Saving entity)
+    {
+        _context.Savings.Remove(entity);
+        await _context.SaveChangesAsync();
+    }
 
-            if (await _context.SaveChangesAsync() > 0)
-            {
-                return true;
-            }
-
-            return false;
-
-        }
-
-        public async Task<bool> DeleteSavingsAsync(int id, string userId)
-        {
-            var savings = await _context.Savings.FindAsync(id);
-            
-            if (savings == null) return false;
-
-            _context.Remove(savings);
-
-            if (await _context.SaveChangesAsync() > 0)
-            {
-                return true;
-            }
-            
-            return false;
-        }
-
-        public async Task<IReadOnlyCollection<SavingsDto>> GetSavingsAsync(string userId)
-        {
-            var savings = await _context.Savings
-                .Include(c => c.Contributions)
-                .ToListAsync();
-
-            return _mapper.Map<List<SavingsDto>>(savings);
-
-        }
-
-        public async  Task<SavingsDto?> GetSavingsByIdAsync(int id, string userId)
-        {
-           var saving = await _context.Savings
-               .Include(c => c.Contributions)
-               .FirstOrDefaultAsync(x => x.Id == id);
-
-            if (saving == null)
-            {
-                return null;
-            }
-
-            // return new SavingsDto
-            // {
-            //     Id = id,
-            //     Name = saving.Name,
-            //     Amount = saving.Amount,
-            //     CreatedAt = saving.CreatedAt,
-            //     Contributions = _mapper.Map<List<ContributionDto>>(saving.Contributions)
-            // };
-            
-            return _mapper.Map<SavingsDto>(saving);
-            
-            
-
-        }
+    public async Task<bool> ExistsAsync(int id)
+    {
+        return await _context.Savings.AnyAsync(s => s.Id == id);
     }
 }
-

@@ -1,4 +1,4 @@
-public class CreateSavingsDto
+public class UpdateSavingsDto
 {
     public string Name { get; set; }
     public double TargetAmount { get; set; }

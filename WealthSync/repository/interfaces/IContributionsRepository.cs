@@ -3,8 +3,8 @@ using WealthSync.Dtos;
 
 namespace WealthSync.repository.interfaces;
 
-public interface IContributionsRepository
+public interface IContributionsRepository : IRepository<Contribution>
 {
-    Task<bool> AddContributionAsync(CreateContributionDto contributionDto, string userId);
-    Task<bool> RemoveContributionAsync(CreateContributionDto contributionDto, string userId);
+    Task<IEnumerable<Contribution>> GetBySavingsGoalIdAsync(int savingsGoalId, string userId);
+    Task<Contribution> GetByIdForUserAsync(int id, string userId);
 }

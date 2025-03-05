@@ -3,11 +3,10 @@ using WealthSync.Dtos;
 
 namespace WealthSync.repository.interfaces
 {
-    public interface ISavingsRepository
+    public interface ISavingsRepository : IRepository<Saving>
     {
-        Task<IReadOnlyCollection<SavingsDto>> GetSavingsAsync(string userId);
-        Task<SavingsDto?> GetSavingsByIdAsync(int id, string userId);
-        Task<bool> CreateSavingsAsync(CreateSavingsDto createSavings, string userId);
-        Task<bool> DeleteSavingsAsync(int id, string userId);
+
+        Task<IEnumerable<Saving>> GetByUserIdAsync(string userId);
+        Task<Saving> GetByIdForUserAsync(int id, string userId);
     }
 }
