@@ -265,6 +265,88 @@ namespace WealthSync.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
+            modelBuilder.Entity("WealthSync.Models.Budget", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("AppUserId")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("EndDate")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("StartDate")
+                        .HasColumnType("TEXT");
+
+                    b.Property<double>("TotalIncome")
+                        .HasColumnType("REAL");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AppUserId");
+
+                    b.ToTable("Budgets");
+                });
+
+            modelBuilder.Entity("WealthSync.Models.BudgetCategory", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<double>("AllocatedAmount")
+                        .HasColumnType("REAL");
+
+                    b.Property<int>("BudgetId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<double>("SpentAmount")
+                        .HasColumnType("REAL");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BudgetId");
+
+                    b.ToTable("BudgetCategories");
+                });
+
+            modelBuilder.Entity("WealthSync.Models.Expense", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<double>("Amount")
+                        .HasColumnType("REAL");
+
+                    b.Property<int>("BudgetCategoryId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BudgetCategoryId");
+
+                    b.ToTable("Expenses");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("WealthSync.Models.AppRole", null)
@@ -336,6 +418,39 @@ namespace WealthSync.Migrations
                     b.Navigation("AppUser");
                 });
 
+            modelBuilder.Entity("WealthSync.Models.Budget", b =>
+                {
+                    b.HasOne("WealthSync.Models.AppUser", "AppUser")
+                        .WithMany()
+                        .HasForeignKey("AppUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("AppUser");
+                });
+
+            modelBuilder.Entity("WealthSync.Models.BudgetCategory", b =>
+                {
+                    b.HasOne("WealthSync.Models.Budget", "Budget")
+                        .WithMany("Categories")
+                        .HasForeignKey("BudgetId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Budget");
+                });
+
+            modelBuilder.Entity("WealthSync.Models.Expense", b =>
+                {
+                    b.HasOne("WealthSync.Models.BudgetCategory", "BudgetCategory")
+                        .WithMany("Expenses")
+                        .HasForeignKey("BudgetCategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("BudgetCategory");
+                });
+
             modelBuilder.Entity("WealthSync.Data.Saving", b =>
                 {
                     b.Navigation("Contributions");
@@ -344,6 +459,16 @@ namespace WealthSync.Migrations
             modelBuilder.Entity("WealthSync.Models.AppUser", b =>
                 {
                     b.Navigation("Savings");
+                });
+
+            modelBuilder.Entity("WealthSync.Models.Budget", b =>
+                {
+                    b.Navigation("Categories");
+                });
+
+            modelBuilder.Entity("WealthSync.Models.BudgetCategory", b =>
+                {
+                    b.Navigation("Expenses");
                 });
 #pragma warning restore 612, 618
         }
