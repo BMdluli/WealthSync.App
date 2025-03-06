@@ -4,6 +4,7 @@ using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -78,12 +79,27 @@ public class StockRepository : IStockRepository
         if (data?.TimeSeriesDaily != null && data.TimeSeriesDaily.Count > 0)
         {
             var latestDate = data.TimeSeriesDaily.Keys.First();
-            var price = Convert.ToDouble(data.TimeSeriesDaily[latestDate].Close);
-            _cache.Set(cacheKey, price, _cacheDuration);
-            return price;
+            string priceString = data.TimeSeriesDaily[latestDate].Close;
+
+            // Normalize by replacing ',' with '.' to ensure consistent decimal formatting
+            priceString = priceString.Replace(',', '.');
+
+            // Try parsing the price with the invariant culture
+            if (double.TryParse(priceString, NumberStyles.Any, CultureInfo.InvariantCulture, out double price))
+            {
+                _cache.Set(cacheKey, price, _cacheDuration);
+                return price;
+            }
+            else
+            {
+                // Handle the case where the price cannot be parsed correctly
+                Console.WriteLine($"Error parsing price: {priceString}");
+                return 0;
+            }
         }
         return 0;
     }
+
 
     public async Task<double> GetDividendYieldAsync(string symbol)
     {

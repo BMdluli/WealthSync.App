@@ -102,6 +102,8 @@ builder.Services.AddMemoryCache();
 // repos
 builder.Services.AddScoped<ISavingsRepository, SavingsRepository>();
 builder.Services.AddScoped<IContributionsRepository, ContributionRepository>();
+builder.Services.AddScoped<IBudgetCategoryRepository, BudgetCategoryRepository>();
+builder.Services.AddScoped<IBudgetRepository, BudgetRepository>();
 builder.Services.AddScoped<IExpenseRepository, ExpenseRepository>();
 builder.Services.AddScoped<IStockRepository, StockRepository>();
 
