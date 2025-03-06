@@ -15,5 +15,8 @@ namespace WealthSync.Data
         public DbSet<Budget> Budgets { get; set; }
         public DbSet<Expense> Expenses { get; set; }
         public DbSet<BudgetCategory> BudgetCategories { get; set; }
+        public DbSet<Stock> Stocks { get; set; }
+        public DbSet<Dividend> Dividends { get; set; }
+        public DbSet<StockPrice> StockPrices { get; set; }
     }
 }

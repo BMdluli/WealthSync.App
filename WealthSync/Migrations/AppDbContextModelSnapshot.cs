@@ -119,6 +119,43 @@ namespace WealthSync.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("Stock", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("AppUserId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("PurchaseDate")
+                        .HasColumnType("TEXT");
+
+                    b.Property<double>("PurchasePrice")
+                        .HasColumnType("REAL");
+
+                    b.Property<double>("Shares")
+                        .HasColumnType("REAL");
+
+                    b.Property<string>("Symbol")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AppUserId");
+
+                    b.ToTable("Stocks");
+                });
+
             modelBuilder.Entity("WealthSync.Data.Contribution", b =>
                 {
                     b.Property<int>("Id")
@@ -128,10 +165,17 @@ namespace WealthSync.Migrations
                     b.Property<double>("Amount")
                         .HasColumnType("REAL");
 
-                    b.Property<DateTime>("CreatedAt")
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<int>("SavingId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("SavingsGoalId")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
@@ -141,7 +185,7 @@ namespace WealthSync.Migrations
                     b.ToTable("Contributions");
                 });
 
-            modelBuilder.Entity("WealthSync.Data.Saving", b =>
+            modelBuilder.Entity("WealthSync.Data.Dividend", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -150,18 +194,43 @@ namespace WealthSync.Migrations
                     b.Property<double>("Amount")
                         .HasColumnType("REAL");
 
+                    b.Property<DateTime>("PaymentDate")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("StockId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("StockId");
+
+                    b.ToTable("Dividends");
+                });
+
+            modelBuilder.Entity("WealthSync.Data.Saving", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
                     b.Property<string>("AppUserId")
-                        .HasColumnType("TEXT");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Icon")
                         .IsRequired()
                         .HasColumnType("TEXT");
+
+                    b.Property<double>("CurrentAmount")
+                        .HasColumnType("REAL");
 
                     b.Property<string>("Name")
                         .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("StartDate")
+                        .HasColumnType("TEXT");
+
+                    b.Property<double>("TargetAmount")
+                        .HasColumnType("REAL");
+
+                    b.Property<DateTime?>("TargetDate")
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
@@ -169,6 +238,28 @@ namespace WealthSync.Migrations
                     b.HasIndex("AppUserId");
 
                     b.ToTable("Savings");
+                });
+
+            modelBuilder.Entity("WealthSync.Data.StockPrice", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<double>("Price")
+                        .HasColumnType("REAL");
+
+                    b.Property<int>("StockId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("Timestamp")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("StockId");
+
+                    b.ToTable("StockPrices");
                 });
 
             modelBuilder.Entity("WealthSync.Models.AppRole", b =>
@@ -398,24 +489,57 @@ namespace WealthSync.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("Stock", b =>
+                {
+                    b.HasOne("WealthSync.Models.AppUser", "AppUser")
+                        .WithMany()
+                        .HasForeignKey("AppUserId");
+
+                    b.Navigation("AppUser");
+                });
+
             modelBuilder.Entity("WealthSync.Data.Contribution", b =>
                 {
-                    b.HasOne("WealthSync.Data.Saving", "Savings")
+                    b.HasOne("WealthSync.Data.Saving", "Saving")
                         .WithMany("Contributions")
                         .HasForeignKey("SavingId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Savings");
+                    b.Navigation("Saving");
+                });
+
+            modelBuilder.Entity("WealthSync.Data.Dividend", b =>
+                {
+                    b.HasOne("Stock", "Stock")
+                        .WithMany("Dividends")
+                        .HasForeignKey("StockId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Stock");
                 });
 
             modelBuilder.Entity("WealthSync.Data.Saving", b =>
                 {
                     b.HasOne("WealthSync.Models.AppUser", "AppUser")
                         .WithMany("Savings")
-                        .HasForeignKey("AppUserId");
+                        .HasForeignKey("AppUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("AppUser");
+                });
+
+            modelBuilder.Entity("WealthSync.Data.StockPrice", b =>
+                {
+                    b.HasOne("Stock", "Stock")
+                        .WithMany("StockPrices")
+                        .HasForeignKey("StockId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Stock");
                 });
 
             modelBuilder.Entity("WealthSync.Models.Budget", b =>
@@ -449,6 +573,13 @@ namespace WealthSync.Migrations
                         .IsRequired();
 
                     b.Navigation("BudgetCategory");
+                });
+
+            modelBuilder.Entity("Stock", b =>
+                {
+                    b.Navigation("Dividends");
+
+                    b.Navigation("StockPrices");
                 });
 
             modelBuilder.Entity("WealthSync.Data.Saving", b =>

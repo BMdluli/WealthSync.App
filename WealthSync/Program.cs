@@ -93,11 +93,19 @@ builder.Services.AddAuthentication(options =>
 
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
+
+
+// Add HttpClient and MemoryCache
+builder.Services.AddHttpClient();
+builder.Services.AddMemoryCache();
+
 // repos
 builder.Services.AddScoped<ISavingsRepository, SavingsRepository>();
 builder.Services.AddScoped<IContributionsRepository, ContributionRepository>();
 builder.Services.AddScoped<IExpenseRepository, ExpenseRepository>();
+builder.Services.AddScoped<IStockRepository, StockRepository>();
 
+builder.Services.Configure<AlphaVantageOptions>(builder.Configuration.GetSection("AlphaVantage"));
 
 
 var app = builder.Build();
