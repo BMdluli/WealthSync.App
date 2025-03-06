@@ -1,0 +1,29 @@
+<aside
+  [ngClass]="[
+    !isCollapsed
+      ? 'w-[265px] h-full bg-white flex flex-col transition-all'
+      : 'w-[80px] h-full bg-white flex flex-col transition-all'
+  ]"
+>
+  <ul class="flex flex-col gap-3 px-4 mt-8">
+    @for(menu of navItems; track menu.id) {
+    <li>
+      <a
+        class="flex items-center gap-2 h-[46px] bg-gray-100 px-2 rounded-lg"
+        [routerLink]="[menu.url]"
+      >
+        <img class="w-6 h-6" src="{{ menu.imageUel }}" alt="{{ menu.title }}" />
+        <p
+          [ngClass]="[!isCollapsed ? 'font-semibold text-gray-600' : 'hidden']"
+        >
+          {{ menu.title }}
+        </p>
+      </a>
+    </li>
+    }
+  </ul>
+
+  <div class="flex justify-center mt-auto h-[46px]">
+    <button (click)="toggleCollapsed()">Close</button>
+  </div>
+</aside>
