@@ -2,5 +2,27 @@
 <div class="flex home">
   <app-sidebar></app-sidebar>
 
-  <p>SAVINGS</p>
+  <div class="flex-1 mx-4">
+    <div class="flex justify-end mt-4">
+      <button
+        class="bg-black text-white h-[48px] px-4 cursor-pointer"
+        (click)="openModal()"
+      >
+        Add Savings
+      </button>
+    </div>
+
+    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-4">
+      <app-savings-card></app-savings-card>
+      <app-savings-card></app-savings-card>
+      <app-savings-card></app-savings-card>
+      <app-savings-card></app-savings-card>
+      <app-savings-card></app-savings-card>
+      <app-savings-card></app-savings-card>
+      <app-savings-card></app-savings-card>
+      <app-savings-card></app-savings-card>
+      <app-savings-card></app-savings-card>
+    </div>
+  </div>
 </div>
+<app-create-goal-modal></app-create-goal-modal>

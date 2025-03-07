@@ -39,7 +39,7 @@ public class ContributionRepository : IContributionsRepository
     {
         return await _context.Contributions
             .Include(c => c.Saving)
-            .Where(c => c.SavingsGoalId == savingsGoalId && c.Saving.AppUserId == userId)
+            .Where(c => c.SavingId == savingsGoalId && c.Saving.AppUserId == userId)
             .ToListAsync();
     }
 
@@ -47,7 +47,7 @@ public class ContributionRepository : IContributionsRepository
     {
         _context.Contributions.Add(entity);
         // Update Saving.CurrentAmount
-        var goal = await _context.Savings.FindAsync(entity.SavingsGoalId);
+        var goal = await _context.Savings.FindAsync(entity.SavingId);
         if (goal != null)
         {
             goal.CurrentAmount += entity.Amount;
@@ -61,7 +61,7 @@ public class ContributionRepository : IContributionsRepository
         // Adjust Saving.CurrentAmount based on the difference
         var original = await _context.Contributions.AsNoTracking()
             .FirstOrDefaultAsync(c => c.Id == entity.Id);
-        var goal = await _context.Savings.FindAsync(entity.SavingsGoalId);
+        var goal = await _context.Savings.FindAsync(entity.SavingId);
         if (original != null && goal != null)
         {
             goal.CurrentAmount = goal.CurrentAmount - original.Amount + entity.Amount;
@@ -74,7 +74,7 @@ public class ContributionRepository : IContributionsRepository
     public async Task DeleteAsync(Contribution entity)
     {
         // Subtract from Saving.CurrentAmount
-        var goal = await _context.Savings.FindAsync(entity.SavingsGoalId);
+        var goal = await _context.Savings.FindAsync(entity.SavingId);
         if (goal != null)
         {
             goal.CurrentAmount -= entity.Amount;

@@ -64,7 +64,12 @@ namespace WealthSync.Controllers
             // user logged in
             var token = GenerateToken(user);
 
-            return Ok(token);
+            var response = new
+            {
+                token = token
+            };
+            
+            return Ok(response);
 
         }
 

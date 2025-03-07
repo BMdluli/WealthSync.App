@@ -36,7 +36,7 @@ public class ContributionController : ControllerBase
         var contributionDtos = userContributions.Select(c => new ContributionDto
         {
             Id = c.Id,
-            SavingsGoalId = c.SavingsGoalId,
+            SavingId = c.SavingId,
             Amount = c.Amount,
             Date = c.Date,
             Description = c.Description
@@ -58,7 +58,7 @@ public class ContributionController : ControllerBase
         var contributionDto = new ContributionDto
         {
             Id = contribution.Id,
-            SavingsGoalId = contribution.SavingsGoalId,
+            SavingId = contribution.SavingId,
             Amount = contribution.Amount,
             Date = contribution.Date,
             Description = contribution.Description
@@ -78,7 +78,7 @@ public class ContributionController : ControllerBase
         var contributionDtos = contributions.Select(c => new ContributionDto
         {
             Id = c.Id,
-            SavingsGoalId = c.SavingsGoalId,
+            SavingId = c.SavingId,
             Amount = c.Amount,
             Date = c.Date,
             Description = c.Description
@@ -95,12 +95,12 @@ public class ContributionController : ControllerBase
         if (userId == null) return Unauthorized();
 
         // Validate SavingsGoal exists and belongs to the user
-        var goal = await _savingsGoalRepository.GetByIdForUserAsync(createDto.SavingsGoalId, userId);
-        if (goal == null) return BadRequest("Invalid SavingsGoalId");
+        var goal = await _savingsGoalRepository.GetByIdForUserAsync(createDto.SavingId, userId);
+        if (goal == null) return BadRequest("Invalid SavingId");
 
         var contribution = new Contribution
         {
-            SavingsGoalId = createDto.SavingsGoalId,
+            SavingId = createDto.SavingId,
             Amount = createDto.Amount,
             Date = DateTime.UtcNow,
             Description = createDto.Description
@@ -111,7 +111,7 @@ public class ContributionController : ControllerBase
         var contributionDto = new ContributionDto
         {
             Id = contribution.Id,
-            SavingsGoalId = contribution.SavingsGoalId,
+            SavingId = contribution.SavingId,
             Amount = contribution.Amount,
             Date = contribution.Date,
             Description = contribution.Description
@@ -130,12 +130,12 @@ public class ContributionController : ControllerBase
         var contribution = await _contributionRepository.GetByIdForUserAsync(id, userId);
         if (contribution == null) return NotFound();
 
-        // Validate new SavingsGoalId if changed
-        if (updateDto.SavingsGoalId != contribution.SavingsGoalId)
+        // Validate new SavingId if changed
+        if (updateDto.SavingId != contribution.SavingId)
         {
-            var goal = await _savingsGoalRepository.GetByIdForUserAsync(updateDto.SavingsGoalId, userId);
-            if (goal == null) return BadRequest("Invalid SavingsGoalId");
-            contribution.SavingsGoalId = updateDto.SavingsGoalId;
+            var goal = await _savingsGoalRepository.GetByIdForUserAsync(updateDto.SavingId, userId);
+            if (goal == null) return BadRequest("Invalid SavingId");
+            contribution.SavingId = updateDto.SavingId;
         }
 
         contribution.Amount = updateDto.Amount;

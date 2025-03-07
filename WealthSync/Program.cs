@@ -92,7 +92,7 @@ builder.Services.AddAuthentication(options =>
     });
 
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
-
+builder.Services.AddCors();
 
 
 // Add HttpClient and MemoryCache
@@ -118,6 +118,13 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseCors(opt => opt
+    .AllowCredentials()
+    .AllowAnyHeader()
+    .AllowAnyMethod()
+    .WithOrigins("http://localhost:4200", "http://localhost:3000", "https://localhost:3000"));
+
 
 app.UseHttpsRedirection();
 

@@ -36,7 +36,7 @@ export class SidebarComponent {
       imageUel: 'assets/icon-bar-chart.png',
     },
   ];
-  isCollapsed = true;
+  isCollapsed = false;
 
   toggleCollapsed() {
     this.isCollapsed = !this.isCollapsed;

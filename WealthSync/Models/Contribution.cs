@@ -7,7 +7,7 @@ namespace WealthSync.Data
         public int Id { get; set; }
 
         [Required]
-        public int SavingsGoalId { get; set; }
+        public int SavingId { get; set; }
         public Saving Saving { get; set; }
         
         public double Amount { get; set; }
