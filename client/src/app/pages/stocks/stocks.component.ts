@@ -46,6 +46,16 @@ export class StocksComponent {
     });
   }
 
+  deleteStock(id: number) {
+    this.stocksService.deleteStock(id).subscribe({
+      next: (_) => {
+        console.log('deleted successfully');
+        this.getStocks();
+      },
+      error: (err) => console.error(err),
+    });
+  }
+
   getProfitLossPercentage(stock: Stock): number {
     if (!stock.purchasePrice || !stock.currentPrice) return 0;
     return (

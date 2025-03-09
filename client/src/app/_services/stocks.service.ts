@@ -10,19 +10,15 @@ export class StocksService {
 
   constructor(private http: HttpClient) {}
 
-  // registerUser(userData: any) {
-  //   return this.http.post(`${this.apiUrl}/register`, userData);
-  // }
-
-  // loginUser(userData: any) {
-  //   return this.http.post<Login>(`${this.apiUrl}/login`, userData);
-  // }
-
   getStocks() {
     return this.http.get<Stock[]>(this.apiUrl);
   }
 
   addStock(userData: any) {
     return this.http.post(this.apiUrl, userData);
+  }
+
+  deleteStock(id: number) {
+    return this.http.delete(`${this.apiUrl}/${id}`);
   }
 }
