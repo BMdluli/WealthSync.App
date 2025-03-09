@@ -23,12 +23,12 @@ export class SavingsComponent implements OnInit {
   constructor(private modalService: ModalService) {}
 
   ngOnInit() {
-    this.modalService.modalVisible$.subscribe((isOpen) => {
+    this.modalService.getModalState('goalModal').subscribe((isOpen) => {
       this.isModalOpen = isOpen;
     });
   }
 
   openModal() {
-    this.modalService.openModal();
+    this.modalService.openModal('goalModal');
   }
 }

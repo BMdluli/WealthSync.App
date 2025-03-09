@@ -11,4 +11,5 @@ public class StockDto
     public double CurrentPrice { get; set; }
     public double DividendYield { get; set; }
     public double TotalDividends { get; set; }
+    public string DividendFrequency { get; set; }
 }

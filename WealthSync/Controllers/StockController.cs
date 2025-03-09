@@ -42,6 +42,7 @@ public class StockController : ControllerBase
             }
 
             var dividendYield = await _stockRepository.GetDividendYieldAsync(stock.Symbol);
+            var dividendFrequency = await _stockRepository.GetDividendFrequencyAsync(stock.Symbol);
 
             stockDtos.Add(new StockDto
             {
@@ -53,7 +54,8 @@ public class StockController : ControllerBase
                 PurchaseDate = stock.PurchaseDate,
                 CurrentPrice = currentPrice,
                 DividendYield = dividendYield,
-                TotalDividends = stock.Dividends.Sum(d => d.Amount * stock.Shares)
+                TotalDividends = stock.Dividends.Sum(d => d.Amount * stock.Shares),
+                DividendFrequency = dividendFrequency // Add this
             });
         }
 
@@ -81,6 +83,7 @@ public class StockController : ControllerBase
         }
 
         var dividendYield = await _stockRepository.GetDividendYieldAsync(stock.Symbol);
+        var dividendFrequency = await _stockRepository.GetDividendFrequencyAsync(stock.Symbol);
 
         var stockDto = new StockDetailDto
         {
@@ -93,6 +96,7 @@ public class StockController : ControllerBase
             CurrentPrice = currentPrice,
             DividendYield = dividendYield,
             TotalDividends = stock.Dividends.Sum(d => d.Amount * stock.Shares),
+            DividendFrequency = dividendFrequency, // Add this
             Prices = stock.StockPrices.Select(sp => new StockPriceDto
             {
                 Price = sp.Price,

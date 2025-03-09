@@ -20,6 +20,7 @@ public class Stock
     public double PurchasePrice { get; set; }
 
     public DateTime PurchaseDate { get; set; }
+    public string DividendFrequency { get; set; }
 
     public List<StockPrice> StockPrices { get; set; }
     public List<Dividend> Dividends { get; set; }

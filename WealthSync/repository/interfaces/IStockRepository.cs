@@ -10,4 +10,5 @@ public interface IStockRepository : IRepository<Stock>
     Task<double> GetDividendYieldAsync(string symbol);
     Task<string> GetStockNameAsync(string symbol);
     Task UpdateStockDataAsync(int stockId);
+    Task<string> GetDividendFrequencyAsync(string stockSymbol);
 }

@@ -163,6 +163,7 @@ public class StockRepository : IStockRepository
     public async Task AddAsync(Stock entity)
     {
         entity.Name = await GetStockNameAsync(entity.Symbol);
+        entity.DividendFrequency = "Quarterly"; // Default assumption
         _context.Stocks.Add(entity);
         await _context.SaveChangesAsync();
         await UpdateStockDataAsync(entity.Id);
@@ -187,6 +188,32 @@ public class StockRepository : IStockRepository
     {
         return await _context.Stocks.AnyAsync(s => s.Id == id);
     }
+    
+    public async Task<string> GetDividendFrequencyAsync(string symbol)
+    {
+        // Placeholder: Could integrate a premium API or external source later
+        // For now, return a default or infer from Dividends if available
+        var stock = await _context.Stocks
+            .Include(s => s.Dividends)
+            .FirstOrDefaultAsync(s => s.Symbol == symbol);
+
+        if (stock != null && stock.Dividends?.Count > 1)
+        {
+            var dates = stock.Dividends
+                .Select(d => d.PaymentDate)
+                .OrderBy(d => d)
+                .ToList();
+            var intervals = dates.Zip(dates.Skip(1), (d1, d2) => (d2 - d1).Days).Average();
+
+            if (intervals <= 45) return "Monthly"; // Approx 30 days
+            if (intervals <= 120) return "Quarterly"; // Approx 90 days
+            if (intervals <= 240) return "Semi-Annually"; // Approx 180 days
+            return "Annually"; // Approx 365 days
+        }
+        return "Quarterly"; // Default for free-tier limitation
+    }
+    
+    
 }
 
 public class AlphaVantageTimeSeriesResponse

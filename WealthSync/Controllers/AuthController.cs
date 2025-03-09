@@ -90,7 +90,7 @@ namespace WealthSync.Controllers
                 _configuration["Jwt:Audience"],
                 claims,
                 DateTime.UtcNow,
-                DateTime.UtcNow.AddHours(1),
+                DateTime.UtcNow.AddHours(5),
                 signingCredentials);
 
             return new JwtSecurityTokenHandler().WriteToken(token);
