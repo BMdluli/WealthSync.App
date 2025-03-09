@@ -13,4 +13,8 @@ export class SavingsService {
   createSavingsGoal(userData: any) {
     return this.http.post<Goal>(this.apiUrl, userData);
   }
+
+  getSavingsGoal() {
+    return this.http.get<Goal[]>(this.apiUrl);
+  }
 }

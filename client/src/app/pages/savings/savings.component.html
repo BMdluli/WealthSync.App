@@ -2,7 +2,7 @@
 <div class="flex home">
   <app-sidebar></app-sidebar>
 
-  <div class="flex-1 mx-4">
+  <div class="flex-1 mx-4 max-w-[1200px] mx-auto">
     <div class="flex justify-end mt-4">
       <button
         class="bg-black text-white h-[48px] px-4 cursor-pointer"
@@ -12,16 +12,10 @@
       </button>
     </div>
 
-    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-4">
-      <app-savings-card></app-savings-card>
-      <app-savings-card></app-savings-card>
-      <app-savings-card></app-savings-card>
-      <app-savings-card></app-savings-card>
-      <app-savings-card></app-savings-card>
-      <app-savings-card></app-savings-card>
-      <app-savings-card></app-savings-card>
-      <app-savings-card></app-savings-card>
-      <app-savings-card></app-savings-card>
+    <div class="grid md:grid-cols-2 gap-4 mt-4">
+      @for(saving of savings; track saving.id) {
+      <app-savings-card [goal]="saving"></app-savings-card>
+      }
     </div>
   </div>
 </div>
