@@ -26,7 +26,7 @@ export class CreateGoalModalComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.modalService.modalVisible$.subscribe((isOpen) => {
+    this.modalService.getModalState('goalModal').subscribe((isOpen) => {
       this.isModalOpen = isOpen;
     });
   }
@@ -42,6 +42,6 @@ export class CreateGoalModalComponent implements OnInit {
   }
 
   closeModal() {
-    this.modalService.closeModal();
+    this.modalService.closeModal('goalModal');
   }
 }

@@ -1,13 +1,13 @@
 @if(isModalOpen) {
 <div
-  class="bg-black/50 absolute inset-0 flex justify-center items-center z-40"
+  class="bg-black/50 absolute inset-0 flex justify-center items-center z-30"
   (click)="closeModal()"
 >
   <div
-    class="bg-white w-full mx-4 p-4 rounded-2xl max-w-[500px]"
+    class="bg-white w-full mx-4 p-4 rounded-2xl max-w-[500px] z-40"
     (click)="$event.stopPropagation()"
   >
-    <h2 class="text-2xl md:text-4xl font-semibold">Create Goal</h2>
+    <h2 class="text-2xl md:text-4xl font-semibold">Add Stock</h2>
 
     <form
       #goalForm="ngForm"
@@ -15,48 +15,37 @@
       class="flex flex-col gap-4 mt-4"
     >
       <div class="flex flex-col">
-        <label for="name">Name</label>
+        <label for="symbol">SYMBOL</label>
         <input
           class="h-[48px] border-2 border-gray-300 rounded-md p-2 mt-1"
           type="text"
-          placeholder="Trip to Cancun"
+          placeholder="AMZN"
           name="name"
-          [(ngModel)]="goalModel.name"
+          [(ngModel)]="stockModel.symbol"
           required
         />
       </div>
 
       <div class="flex flex-col">
-        <label for="amount">Target Amount</label>
+        <label for="shares">Shares</label>
         <input
           class="h-[48px] border-2 border-gray-300 rounded-md p-2 mt-1"
           type="number"
-          placeholder="Trip to Cancun"
-          name="amount"
-          [(ngModel)]="goalModel.targetAmount"
+          placeholder="10"
+          name="shares"
+          [(ngModel)]="stockModel.shares"
           required
         />
       </div>
 
       <div class="flex flex-col">
-        <label for="start">Start Date</label>
+        <label for="price">Purchase Price</label>
         <input
           class="h-[48px] border-2 border-gray-300 rounded-md p-2 mt-1"
-          type="date"
-          placeholder="Trip to Cancun"
-          name="start"
-          [(ngModel)]="goalModel.startDate"
-          required
-        />
-      </div>
-
-      <div class="flex flex-col">
-        <label for="end">Target Date</label>
-        <input
-          class="h-[48px] border-2 border-gray-300 rounded-md p-2 mt-1"
-          type="date"
-          name="end"
-          [(ngModel)]="goalModel.targetDate"
+          type="text"
+          placeholder="120"
+          name="price"
+          [(ngModel)]="stockModel.purchasePrice"
           required
         />
       </div>
