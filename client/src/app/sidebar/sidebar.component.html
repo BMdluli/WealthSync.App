@@ -9,8 +9,9 @@
     @for(menu of navItems; track menu.id) {
     <li>
       <a
-        class="flex items-center gap-2 h-[46px] bg-gray-100 px-2 rounded-lg"
+        class="flex items-center gap-2 h-[46px] px-2 rounded-lg hover:bg-gray-100 transition-all duration-300"
         [routerLink]="[menu.url]"
+        routerLinkActive="bg-gray-200"
       >
         <img class="w-6 h-6" src="{{ menu.imageUel }}" alt="{{ menu.title }}" />
         <p
@@ -24,6 +25,8 @@
   </ul>
 
   <div class="flex justify-center mt-auto h-[46px]">
-    <button (click)="toggleCollapsed()">Close</button>
+    <button class="w-full font-semibold" (click)="toggleCollapsed()">
+      Collapse
+    </button>
   </div>
 </aside>
