@@ -17,4 +17,8 @@ export class SavingsService {
   getSavingsGoal() {
     return this.http.get<Goal[]>(this.apiUrl);
   }
+
+  deleteSavingsGoal(id: any) {
+    return this.http.delete(`${this.apiUrl}/${id}`);
+  }
 }

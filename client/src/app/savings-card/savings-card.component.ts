@@ -2,6 +2,7 @@ import { Component, Input } from '@angular/core';
 import { Goal } from '../_models/goal';
 import { NgCircleProgressModule } from 'ng-circle-progress';
 import { CommonModule } from '@angular/common';
+import { SavingsService } from '../_services/savings.service';
 
 @Component({
   selector: 'app-savings-card',
@@ -31,8 +32,18 @@ export class SavingsCardComponent {
     );
   }
 
+  constructor(private savingsService: SavingsService) {}
+
   calculatePercentage() {
     const percentage = (this.goal.currentAmount / this.goal.targetAmount) * 100;
     return percentage;
+  }
+
+  // window.location.reload()
+  deleteGoal() {
+    this.savingsService.deleteSavingsGoal(this.goal.id).subscribe({
+      next: (_) => console.log('Goal deleted successfully'),
+      error: (err) => console.error(err),
+    });
   }
 }
