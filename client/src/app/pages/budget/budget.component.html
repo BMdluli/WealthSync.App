@@ -1,17 +1,13 @@
 <app-header></app-header>
-<div class="flex home w-full">
-  <app-sidebar></app-sidebar>
-
-  <div class="flex-1 m-4 max-w-[1200px] mx-auto">
-    <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
-      @for(budget of budgetItems; track budget.id) {
-      <app-budget-card
-        title="{{ budget.name }}"
-        [income]="budget.totalIncome"
-        subTitle="{{ budget.endDate }} Income"
-        [id]="budget.id"
-      ></app-budget-card>
-      }
-    </div>
+<div class="m-4 max-w-[1200px] mx-auto">
+  <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+    @for(budget of budgetItems; track budget.id) {
+    <app-budget-card
+      title="{{ budget.name }}"
+      [income]="budget.totalIncome"
+      subTitle="{{ budget.endDate }} Income"
+      [id]="budget.id"
+    ></app-budget-card>
+    }
   </div>
 </div>

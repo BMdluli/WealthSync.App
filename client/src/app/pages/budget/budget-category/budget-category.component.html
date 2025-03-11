@@ -1,82 +1,73 @@
-<div class="w-full">
-  <app-header></app-header>
-  <div class="md:flex home">
-    <app-sidebar></app-sidebar>
+<app-header></app-header>
 
-    <div class="md:flex-2 m-4">
-      <h1 class="text-2xl md:text-4xl font-bold">Budget Categories</h1>
+<div class="md:flex-2 m-4">
+  <h1 class="text-2xl md:text-4xl font-bold">Budget Categories</h1>
 
-      <div class="flex justify-start md:justify-end mt-2">
-        <button
-          class="bg-black text-white h-[48px] px-2 cursor-pointer"
-          (click)="openBudgetModal()"
-        >
-          Add Budget Catgory
-        </button>
-      </div>
+  <div class="flex justify-start md:justify-end mt-2">
+    <button
+      class="bg-black text-white h-[48px] px-2 cursor-pointer"
+      (click)="openBudgetModal()"
+    >
+      Add Budget Catgory
+    </button>
+  </div>
 
-      <div class="flex gap-4 mt-4 overflow-x-scroll">
-        @for(item of budgetCategories; track item.id) {
-        <div class="w-[230px]">
-          <app-budget-expense-card
-            [id]="item.id"
-            title="{{ item.name }}"
-            [income]="item.allocatedAmount"
-            subTitle="Budget"
-          ></app-budget-expense-card>
-        </div>
-        }
-      </div>
+  <div class="flex gap-4 mt-4 overflow-x-scroll">
+    @for(item of budgetCategories; track item.id) {
+    <div class="w-[230px]">
+      <app-budget-expense-card
+        [id]="item.id"
+        title="{{ item.name }}"
+        [income]="item.allocatedAmount"
+        subTitle="Budget"
+      ></app-budget-expense-card>
+    </div>
+    }
+  </div>
 
-      <div class="mt-6">
-        <h2 class="text-xl font-semibold">Budget Category</h2>
-        <div class="mt-2 overflow-x-auto">
-          <table
-            class="w-full border-collapse rounded-lg shadow-md min-w-[600px]"
+  <div class="mt-6">
+    <h2 class="text-xl font-semibold">Budget Category</h2>
+    <div class="mt-2 overflow-x-auto">
+      <table class="w-full border-collapse rounded-lg shadow-md min-w-[600px]">
+        <thead>
+          <tr
+            class="bg-gray-200 text-gray-600 text-left text-sm uppercase tracking-wider"
           >
-            <thead>
-              <tr
-                class="bg-gray-200 text-gray-600 text-left text-sm uppercase tracking-wider"
-              >
-                <th class="p-3">Budget</th>
-                <th class="p-3">Limit</th>
-                <th class="p-3">Spent</th>
-                <th class="p-3">Remaining</th>
-                <th class="p-3">Status</th>
-              </tr>
-            </thead>
+            <th class="p-3">Budget</th>
+            <th class="p-3">Limit</th>
+            <th class="p-3">Spent</th>
+            <th class="p-3">Remaining</th>
+            <th class="p-3">Status</th>
+          </tr>
+        </thead>
 
-            <tbody>
-              @for(item of budgetCategories; track item.id) {
-              <tr class="border-b last:border-0 hover:bg-gray-50">
-                <th class="p-3 font-medium text-gray-800">{{ item.name }}</th>
-                <td class="p-3">{{ item.allocatedAmount | currency }}</td>
-                <td class="p-3">{{ item.spentAmount | currency }}</td>
-                <td class="p-3">
-                  {{ item.allocatedAmount - item.spentAmount | currency }}
-                </td>
-                <td class="p-3">
-                  <span
-                    [ngClass]="{
-                      'text-green-600':
-                        item.allocatedAmount - item.spentAmount > 0,
-                      'text-red-600':
-                        item.allocatedAmount - item.spentAmount <= 0
-                    }"
-                  >
-                    {{
-                      item.allocatedAmount - item.spentAmount > 0
-                        ? "On Track"
-                        : "Over Budget"
-                    }}
-                  </span>
-                </td>
-              </tr>
-              }
-            </tbody>
-          </table>
-        </div>
-      </div>
+        <tbody>
+          @for(item of budgetCategories; track item.id) {
+          <tr class="border-b last:border-0 hover:bg-gray-50">
+            <th class="p-3 font-medium text-gray-800">{{ item.name }}</th>
+            <td class="p-3">{{ item.allocatedAmount | currency }}</td>
+            <td class="p-3">{{ item.spentAmount | currency }}</td>
+            <td class="p-3">
+              {{ item.allocatedAmount - item.spentAmount | currency }}
+            </td>
+            <td class="p-3">
+              <span
+                [ngClass]="{
+                  'text-green-600': item.allocatedAmount - item.spentAmount > 0,
+                  'text-red-600': item.allocatedAmount - item.spentAmount <= 0
+                }"
+              >
+                {{
+                  item.allocatedAmount - item.spentAmount > 0
+                    ? "On Track"
+                    : "Over Budget"
+                }}
+              </span>
+            </td>
+          </tr>
+          }
+        </tbody>
+      </table>
     </div>
   </div>
 </div>

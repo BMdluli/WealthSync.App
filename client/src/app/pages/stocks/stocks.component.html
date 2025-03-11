@@ -1,107 +1,103 @@
 <app-create-stock-modal></app-create-stock-modal>
 
 <app-header></app-header>
-<div class="flex home">
-  <app-sidebar></app-sidebar>
-
-  <div class="flex-1 m-4">
-    <!-- TOP SECTION -->
-    <div class="flex flex-col md:flex-row md:justify-between gap-4">
-      <div class="flex items-end gap-2">
-        <h1 class="text-2xl font-bold">${{ total }}</h1>
-        <span class="text-xs bg-gray-300 rounded-sm px-1">$495.533</span>
-      </div>
-
-      <div>
-        <button
-          class="bg-black text-white h-[40px] px-4 cursor-pointer rounded-sm"
-          (click)="openModal()"
-        >
-          Add Stock
-        </button>
-      </div>
+<div class="flex-1 m-4">
+  <!-- TOP SECTION -->
+  <div class="flex flex-col md:flex-row md:justify-between gap-4">
+    <div class="flex items-end gap-2">
+      <h1 class="text-2xl font-bold">${{ total }}</h1>
+      <span class="text-xs bg-gray-300 rounded-sm px-1">$495.533</span>
     </div>
 
-    <!-- Summary -->
-
-    <div
-      class="border-1 border-gray-200 rounded-lg px-4 md:grid md:grid-cols-2 lg:grid-cols-4 gap-4 mt-4"
-    >
-      <app-stock-card
-        title="Portfolio yield"
-        value="{{ calculateSummaryValues().toFixed(2) }}%"
-        imgaeUrl="assets/icon-wallet.png"
-      ></app-stock-card>
-
-      <app-stock-card
-        title="Annual Income"
-        value="${{ calculateAnnualIncome().toFixed(2) }}"
-        imgaeUrl="assets/icon-wallet.png"
-      ></app-stock-card>
-
-      <app-stock-card
-        title="Portfolio yield"
-        value="0.84%"
-        imgaeUrl="assets/icon-wallet.png"
-      ></app-stock-card>
-
-      <app-stock-card
-        title="Portfolio yield"
-        value="0.84%"
-        imgaeUrl="assets/icon-wallet.png"
-      ></app-stock-card>
+    <div>
+      <button
+        class="bg-black text-white h-[40px] px-4 cursor-pointer rounded-sm"
+        (click)="openModal()"
+      >
+        Add Stock
+      </button>
     </div>
+  </div>
 
-    <!-- SUMMARY TABLE -->
+  <!-- Summary -->
 
-    <div class="relative overflow-x-auto shadow-md sm:rounded-lg mt-6">
-      <table class="w-full text-sm text-left rtl:text-right text-gray-500">
-        <thead class="text-xs text-gray-700 uppercase bg-gray-50">
-          <tr>
-            <th scope="col" class="px-6 py-3">Ticker</th>
-            <th scope="col" class="px-6 py-3">Shares</th>
-            <th scope="col" class="px-6 py-3">Price</th>
-            <th scope="col" class="px-6 py-3">Average Cost</th>
-            <th scope="col" class="px-6 py-3">Profit/Loss</th>
-            <th scope="col" class="px-6 py-3">Dividend Yield</th>
-            <th scope="col" class="px-6 py-3">Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          @for(stock of stocks; track stock.id) {
-          <tr class="odd:bg-white even:bg-gray-50 border-b border-gray-200">
-            <th
-              scope="row"
-              class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap"
+  <div
+    class="border-1 border-gray-200 rounded-lg px-4 md:grid md:grid-cols-2 lg:grid-cols-4 gap-4 mt-4"
+  >
+    <app-stock-card
+      title="Portfolio yield"
+      value="{{ calculateSummaryValues().toFixed(2) }}%"
+      imgaeUrl="assets/icon-wallet.png"
+    ></app-stock-card>
+
+    <app-stock-card
+      title="Annual Income"
+      value="${{ calculateAnnualIncome().toFixed(2) }}"
+      imgaeUrl="assets/icon-wallet.png"
+    ></app-stock-card>
+
+    <app-stock-card
+      title="Portfolio yield"
+      value="0.84%"
+      imgaeUrl="assets/icon-wallet.png"
+    ></app-stock-card>
+
+    <app-stock-card
+      title="Portfolio yield"
+      value="0.84%"
+      imgaeUrl="assets/icon-wallet.png"
+    ></app-stock-card>
+  </div>
+
+  <!-- SUMMARY TABLE -->
+
+  <div class="relative overflow-x-auto shadow-md sm:rounded-lg mt-6">
+    <table class="w-full text-sm text-left rtl:text-right text-gray-500">
+      <thead class="text-xs text-gray-700 uppercase bg-gray-50">
+        <tr>
+          <th scope="col" class="px-6 py-3">Ticker</th>
+          <th scope="col" class="px-6 py-3">Shares</th>
+          <th scope="col" class="px-6 py-3">Price</th>
+          <th scope="col" class="px-6 py-3">Average Cost</th>
+          <th scope="col" class="px-6 py-3">Profit/Loss</th>
+          <th scope="col" class="px-6 py-3">Dividend Yield</th>
+          <th scope="col" class="px-6 py-3">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for(stock of stocks; track stock.id) {
+        <tr class="odd:bg-white even:bg-gray-50 border-b border-gray-200">
+          <th
+            scope="row"
+            class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap"
+          >
+            {{ stock.name }}
+          </th>
+          <td class="px-6 py-4">{{ stock.shares }}</td>
+          <td class="px-6 py-4">{{ stock.currentPrice }}</td>
+          <td class="px-6 py-4">{{ stock.purchasePrice }}</td>
+          <td
+            [ngClass]="
+              getProfitLossPercentage(stock) >= 0
+                ? 'text-green-500'
+                : 'text-red-500'
+            "
+          >
+            {{ getProfitLossPercentage(stock).toFixed(2) }}%
+          </td>
+          <td class="px-6 py-4">{{ stock.dividendYield.toFixed(2) }}</td>
+          <td class="px-6 py-4">
+            <button
+              href="#"
+              class="h-6 w-6 ml-2 cursor-pointer"
+              (click)="deleteStock(stock.id)"
             >
-              {{ stock.name }}
-            </th>
-            <td class="px-6 py-4">{{ stock.shares }}</td>
-            <td class="px-6 py-4">{{ stock.currentPrice }}</td>
-            <td class="px-6 py-4">{{ stock.purchasePrice }}</td>
-            <td
-              [ngClass]="
-                getProfitLossPercentage(stock) >= 0
-                  ? 'text-green-500'
-                  : 'text-red-500'
-              "
-            >
-              {{ getProfitLossPercentage(stock).toFixed(2) }}%
-            </td>
-            <td class="px-6 py-4">{{ stock.dividendYield.toFixed(2) }}</td>
-            <td class="px-6 py-4">
-              <button
-                href="#"
-                class="h-6 w-6 ml-2 cursor-pointer"
-                (click)="deleteStock(stock.id)"
-              >
-                <img src="assets/icon-trash.png" alt="delete" />
-              </button>
-            </td>
-          </tr>
-          }
-        </tbody>
-      </table>
-    </div>
+              <img src="assets/icon-trash.png" alt="delete" />
+            </button>
+          </td>
+        </tr>
+        }
+      </tbody>
+    </table>
   </div>
 </div>

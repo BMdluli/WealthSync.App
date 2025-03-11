@@ -1,38 +1,35 @@
 <app-header></app-header>
-<div class="flex home">
-  <app-sidebar></app-sidebar>
 
-  <div class="flex-1 m-4">
-    <!-- CARD ROW -->
-    <div class="grid grid-cols-2 md:grid-cols-3 gap-2 md:gap-4 h-[160px]">
-      <div class="bg-rose-300 rounded-lg p-2">
-        <img src="/assets/icon-wallet.png" alt="savings" />
-        <p class="font-semibold">Savings</p>
-        <p class="font-bold">R{{ totalSavings }}</p>
-      </div>
-
-      <div class="bg-rose-300 rounded-lg p-2">
-        <img src="/assets/icon-credit-card.png" alt="savings" />
-        <p class="font-semibold">Budget</p>
-        <p class="font-bold">R123,456</p>
-      </div>
-
-      <div class="bg-rose-300 rounded-lg p-2">
-        <img src="/assets/icon-bar-chart.png" alt="savings" />
-        <p class="font-semibold">Stocks</p>
-        <p class="font-bold">R123,456</p>
-      </div>
+<div class="m-4">
+  <!-- CARD ROW -->
+  <div class="grid grid-cols-2 md:grid-cols-3 gap-2 md:gap-4 h-[160px]">
+    <div class="bg-rose-300 rounded-lg p-2">
+      <img src="/assets/icon-wallet.png" alt="savings" />
+      <p class="font-semibold">Savings</p>
+      <p class="font-bold">R{{ totalSavings }}</p>
     </div>
 
-    <div class="grid md:grid-cols-2 mt-6">
-      <div></div>
-      <div class="border-2 border-gray-400 p-4 rounded-2xl">
-        <h2 class="uppercase mb-2 font-bold text-2xl">Savings</h2>
-        <div class="flex flex-col gap-4">
-          @for(saving of savings; track saving.id) {
-          <app-savings-card [goal]="saving"></app-savings-card>
-          }
-        </div>
+    <div class="bg-rose-300 rounded-lg p-2">
+      <img src="/assets/icon-credit-card.png" alt="savings" />
+      <p class="font-semibold">Budget</p>
+      <p class="font-bold">R123,456</p>
+    </div>
+
+    <div class="bg-rose-300 rounded-lg p-2">
+      <img src="/assets/icon-bar-chart.png" alt="savings" />
+      <p class="font-semibold">Stocks</p>
+      <p class="font-bold">R123,456</p>
+    </div>
+  </div>
+
+  <div class="grid md:grid-cols-2 mt-6">
+    <div></div>
+    <div class="border-2 border-gray-400 p-4 rounded-2xl">
+      <h2 class="uppercase mb-2 font-bold text-2xl">Savings</h2>
+      <div class="flex flex-col gap-4">
+        @for(saving of savings; track saving.id) {
+        <app-savings-card [goal]="saving"></app-savings-card>
+        }
       </div>
     </div>
   </div>
