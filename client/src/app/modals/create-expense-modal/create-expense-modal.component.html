@@ -1,0 +1,51 @@
+@if(isModalOpen) {
+<div
+  class="bg-black/50 absolute inset-0 flex justify-center items-center z-30"
+  (click)="closeModal()"
+>
+  <div
+    class="bg-white w-full mx-4 p-4 rounded-2xl max-w-[500px] z-40"
+    (click)="$event.stopPropagation()"
+  >
+    <h2 class="text-2xl md:text-4xl font-semibold">Add Expense</h2>
+
+    <form
+      #expenseForm="ngForm"
+      (ngSubmit)="handleSubmit(expenseForm)"
+      class="flex flex-col gap-4 mt-4"
+    >
+      <div class="flex flex-col">
+        <label for="description">Description</label>
+        <input
+          class="h-[48px] border-2 border-gray-300 rounded-md p-2 mt-1"
+          type="text"
+          placeholder="Used 10k towards expense"
+          name="description"
+          [(ngModel)]="expenseModal.description"
+          required
+        />
+      </div>
+
+      <div class="flex flex-col">
+        <label for="amount">Amount</label>
+        <input
+          class="h-[48px] border-2 border-gray-300 rounded-md p-2 mt-1"
+          type="number"
+          placeholder="1000"
+          name="amount"
+          [(ngModel)]="expenseModal.amount"
+          required
+        />
+      </div>
+
+      <button
+        type="submit"
+        class="bg-black text-white w-full h-[40px] rounded-lg cursor-pointer"
+      >
+        Create
+      </button>
+    </form>
+  </div>
+</div>
+
+}

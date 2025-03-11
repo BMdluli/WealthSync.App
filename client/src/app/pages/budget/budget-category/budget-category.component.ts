@@ -1,13 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { SidebarComponent } from '../../../sidebar/sidebar.component';
 import { HeaderComponent } from '../../../header/header.component';
-import { BudgetCardComponent } from '../budget-card/budget-card.component';
 import { BudgetCategoryService } from '../../../_services/budget-category.service';
 import { ActivatedRoute } from '@angular/router';
 import { BudgetCategory } from '../../../_models/budgetCategory';
 import { CommonModule } from '@angular/common';
 import { ModalService } from '../../../_services/modal.service';
 import { CreateBudgetCategoryModalComponent } from '../../../modals/create-budget-category-modal/create-budget-category-modal.component';
+import { BudgetExpenseCardComponent } from '../budget-expense-card/budget-expense-card.component';
 
 @Component({
   selector: 'app-budget-category',
@@ -15,9 +15,9 @@ import { CreateBudgetCategoryModalComponent } from '../../../modals/create-budge
   imports: [
     SidebarComponent,
     HeaderComponent,
-    BudgetCardComponent,
     CommonModule,
     CreateBudgetCategoryModalComponent,
+    BudgetExpenseCardComponent,
   ],
   templateUrl: './budget-category.component.html',
   styleUrl: './budget-category.component.scss',
@@ -25,7 +25,8 @@ import { CreateBudgetCategoryModalComponent } from '../../../modals/create-budge
 export class BudgetCategoryComponent implements OnInit {
   id: string | null = '';
   budgetCategories: BudgetCategory[] = [];
-  isModalOpen = false;
+  isBudgetModalOpen = false;
+  isExpenseModalOpen = false;
 
   constructor(
     private budgetCategoryService: BudgetCategoryService,
@@ -39,8 +40,11 @@ export class BudgetCategoryComponent implements OnInit {
     this.modalService
       .getModalState('budgetCategoryModal')
       .subscribe((isOpen) => {
-        this.isModalOpen = isOpen;
+        this.isBudgetModalOpen = isOpen;
       });
+    this.modalService.getModalState('expenseModal').subscribe((isOpen) => {
+      this.isExpenseModalOpen = isOpen;
+    });
   }
 
   getBudgetCategories() {
@@ -50,7 +54,7 @@ export class BudgetCategoryComponent implements OnInit {
     });
   }
 
-  openModal() {
+  openBudgetModal() {
     this.modalService.openModal('budgetCategoryModal');
   }
 }

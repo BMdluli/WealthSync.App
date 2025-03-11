@@ -8,14 +8,24 @@
       <p>R{{ goal.targetAmount }}</p>
     </div>
 
-    <progress
+    <!-- <progress
       class="w-full"
       id="temp"
       value="{{ calculatePercentage() }}"
       max="100"
     >
       {{ calculatePercentage() }}%
-    </progress>
+    </progress> -->
+    <circle-progress
+      [percent]="85"
+      [radius]="100"
+      [outerStrokeWidth]="16"
+      [innerStrokeWidth]="8"
+      [outerStrokeColor]="'#78C000'"
+      [innerStrokeColor]="'#C7E596'"
+      [animation]="true"
+      [animationDuration]="300"
+    ></circle-progress>
 
     <div class="flex justify-between">
       <p>R{{ goal.currentAmount }}</p>

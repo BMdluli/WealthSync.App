@@ -8,8 +8,8 @@
 
       <div class="flex justify-start md:justify-end mt-2">
         <button
-          class="bg-black text-white h-[48px] px-4 cursor-pointer"
-          (click)="openModal()"
+          class="bg-black text-white h-[48px] px-2 cursor-pointer"
+          (click)="openBudgetModal()"
         >
           Add Budget Catgory
         </button>
@@ -18,11 +18,12 @@
       <div class="flex gap-4 mt-4 overflow-x-scroll">
         @for(item of budgetCategories; track item.id) {
         <div class="w-[230px]">
-          <app-budget-card
+          <app-budget-expense-card
+            [id]="item.id"
             title="{{ item.name }}"
             [income]="item.allocatedAmount"
             subTitle="Budget"
-          ></app-budget-card>
+          ></app-budget-expense-card>
         </div>
         }
       </div>

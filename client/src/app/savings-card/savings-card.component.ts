@@ -1,10 +1,11 @@
 import { Component, Input } from '@angular/core';
 import { Goal } from '../_models/goal';
+import { NgCircleProgressModule } from 'ng-circle-progress';
 
 @Component({
   selector: 'app-savings-card',
   standalone: true,
-  imports: [],
+  imports: [NgCircleProgressModule],
   templateUrl: './savings-card.component.html',
   styleUrl: './savings-card.component.scss',
 })
