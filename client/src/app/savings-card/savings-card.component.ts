@@ -3,11 +3,17 @@ import { Goal } from '../_models/goal';
 import { NgCircleProgressModule } from 'ng-circle-progress';
 import { CommonModule } from '@angular/common';
 import { SavingsService } from '../_services/savings.service';
+import { AddContributionModalComponent } from '../modals/add-contribution-modal/add-contribution-modal.component';
+import { ModalService } from '../_services/modal.service';
 
 @Component({
   selector: 'app-savings-card',
   standalone: true,
-  imports: [NgCircleProgressModule, CommonModule],
+  imports: [
+    NgCircleProgressModule,
+    CommonModule,
+    AddContributionModalComponent,
+  ],
   templateUrl: './savings-card.component.html',
   styleUrl: './savings-card.component.scss',
 })
@@ -20,6 +26,7 @@ export class SavingsCardComponent {
     startDate: new Date(),
     targetDate: new Date(),
   };
+  isOpen = false;
 
   radius = 40; // Radius of the circle
   circumference = 2 * Math.PI * this.radius; // Full circle length
@@ -32,7 +39,23 @@ export class SavingsCardComponent {
     );
   }
 
-  constructor(private savingsService: SavingsService) {}
+  constructor(
+    private savingsService: SavingsService,
+    private modalService: ModalService
+  ) {}
+
+  ngOnInit(): void {
+    this.modalService.getModalState('contributionModal').subscribe((isOpen) => {
+      this.isOpen = isOpen;
+    });
+    // console.log(this.id);
+  }
+
+  openModal() {
+    this.modalService.openModal('contributionModal', {
+      budgetCategoryId: this.goal.id,
+    });
+  }
 
   calculatePercentage() {
     const percentage = (this.goal.currentAmount / this.goal.targetAmount) * 100;

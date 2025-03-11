@@ -6,7 +6,7 @@ import { CreateExpenseModalComponent } from '../../../modals/create-expense-moda
 @Component({
   selector: 'app-budget-card',
   standalone: true,
-  imports: [RouterModule, CommonModule, CreateExpenseModalComponent],
+  imports: [RouterModule, CommonModule],
   templateUrl: './budget-card.component.html',
   styleUrl: './budget-card.component.scss',
 })

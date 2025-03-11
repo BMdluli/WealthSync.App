@@ -1,0 +1,51 @@
+@if(isModalOpen) {
+<div
+  class="bg-black/20 absolute inset-0 flex justify-center items-center z-40"
+  (click)="closeModal()"
+>
+  <div
+    class="bg-white w-full mx-4 p-4 rounded-2xl max-w-[500px] z-40"
+    (click)="$event.stopPropagation()"
+  >
+    <h2 class="text-2xl md:text-4xl font-semibold">Add Contribution</h2>
+
+    <form
+      #formModel="ngForm"
+      (ngSubmit)="handleSubmit(formModel)"
+      class="flex flex-col gap-4 mt-4"
+    >
+      <div class="flex flex-col">
+        <label for="condtribution">Contribution Amount</label>
+        <input
+          class="h-[48px] border-2 border-gray-300 rounded-md p-2 mt-1"
+          type="number"
+          placeholder="1000"
+          name="condtribution"
+          [(ngModel)]="contributionModel.amount"
+          required
+        />
+      </div>
+
+      <div class="flex flex-col">
+        <label for="description">Description</label>
+        <input
+          class="h-[48px] border-2 border-gray-300 rounded-md p-2 mt-1"
+          type="text"
+          placeholder="Added 10K"
+          name="description"
+          [(ngModel)]="contributionModel.description"
+          required
+        />
+      </div>
+
+      <button
+        type="submit"
+        class="bg-black text-white w-full h-[40px] rounded-lg cursor-pointer"
+      >
+        Add Contribution
+      </button>
+    </form>
+  </div>
+</div>
+
+}

@@ -52,7 +52,10 @@
     </div>
 
     <div class="flex gap-2 w-full">
-      <button class="bg-green-500 p-2 text-white font-semibold cursor-pointer">
+      <button
+        class="bg-green-500 p-2 text-white font-semibold cursor-pointer"
+        (click)="openModal()"
+      >
         Add contribution
       </button>
 
@@ -65,3 +68,4 @@
     </div>
   </div>
 </div>
+<app-add-contribution-modal id="{{ goal.id }}"></app-add-contribution-modal>
