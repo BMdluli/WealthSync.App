@@ -11,19 +11,19 @@
 
   <div class="flex gap-2">
     <button
-      class="bg-green-400 py-1 px-4 text-white text-2xl cursor-pointer"
+      class="bg-green-400 px-2 py-1 text-white cursor-pointer"
       (click)="openExpenseModal()"
     >
-      +
+      <img src="assets/icon-plus.png" alt="edit" />
     </button>
     <button
-      class="bg-yellow-400 py-1 px-4 text-white text-2xl cursor-pointer"
-      (click)="openExpenseModal()"
+      class="bg-yellow-400 px-2 py-1 text-white cursor-pointer"
+      (click)="openBudgetCategoryModal()"
     >
       <img src="assets/icon-edit.png" alt="edit" />
     </button>
     <button
-      class="bg-red-600 py-1 px-4 text-white text-2xl cursor-pointer"
+      class="bg-red-600 px-2 py-1 text-white cursor-pointer"
       (click)="deleteBudgetCategory()"
     >
       <img src="assets/icon-trash.png" alt="delete" />
@@ -31,3 +31,4 @@
   </div>
 </div>
 <app-create-expense-modal id="{{ id }}"></app-create-expense-modal>
+<app-edit-budget-category-modal></app-edit-budget-category-modal>

@@ -13,7 +13,6 @@ import { BudgetExpenseCardComponent } from '../budget-expense-card/budget-expens
   selector: 'app-budget-category',
   standalone: true,
   imports: [
-    SidebarComponent,
     HeaderComponent,
     CommonModule,
     CreateBudgetCategoryModalComponent,

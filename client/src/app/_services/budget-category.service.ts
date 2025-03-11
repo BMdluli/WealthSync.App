@@ -21,4 +21,8 @@ export class BudgetCategoryService {
   deleteBudgetCategory(id: number) {
     return this.http.delete(`${this.apiUrl}/${id}`);
   }
+
+  editBudgetCategory(id: number, formData: any) {
+    return this.http.put(`${this.apiUrl}/${id}`, formData);
+  }
 }
