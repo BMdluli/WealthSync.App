@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, Input } from '@angular/core';
 import { ModalService } from '../../../_services/modal.service';
 import { CreateExpenseModalComponent } from '../../../modals/create-expense-modal/create-expense-modal.component';
+import { BudgetCategoryService } from '../../../_services/budget-category.service';
 
 @Component({
   selector: 'app-budget-expense-card',
@@ -18,7 +19,10 @@ export class BudgetExpenseCardComponent {
 
   isExpenseModalOpen = false;
 
-  constructor(private modalService: ModalService) {}
+  constructor(
+    private modalService: ModalService,
+    private budgetCategoryService: BudgetCategoryService
+  ) {}
 
   ngOnInit(): void {
     this.modalService.getModalState('expenseModal').subscribe((isOpen) => {
@@ -29,5 +33,12 @@ export class BudgetExpenseCardComponent {
 
   openExpenseModal() {
     this.modalService.openModal('expenseModal', { budgetCategoryId: this.id });
+  }
+
+  deleteBudgetCategory() {
+    this.budgetCategoryService.deleteBudgetCategory(this.id).subscribe({
+      next: (_) => console.log('Budget Category deleted successfully'),
+      error: (err) => console.error(err),
+    });
   }
 }

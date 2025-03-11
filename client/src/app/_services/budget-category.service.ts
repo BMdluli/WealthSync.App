@@ -17,4 +17,8 @@ export class BudgetCategoryService {
   createBudgetCategory(formData: any) {
     return this.http.post<BudgetCategory>(this.apiUrl, formData);
   }
+
+  deleteBudgetCategory(id: number) {
+    return this.http.delete(`${this.apiUrl}/${id}`);
+  }
 }
