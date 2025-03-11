@@ -1,5 +1,14 @@
 <app-header></app-header>
 <div class="m-4 max-w-[1200px] mx-auto">
+  <div class="flex justify-end my-4">
+    <button
+      class="bg-black text-white h-[48px] px-4 cursor-pointer"
+      (click)="openModal()"
+    >
+      Add Budget
+    </button>
+  </div>
+
   <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
     @for(budget of budgetItems; track budget.id) {
     <app-budget-card
@@ -11,3 +20,4 @@
     }
   </div>
 </div>
+<app-create-budget-modal></app-create-budget-modal>

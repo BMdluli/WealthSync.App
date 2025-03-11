@@ -13,4 +13,8 @@ export class BudgetService {
   getbudgetItems() {
     return this.http.get<Budget[]>(this.apiUrl);
   }
+
+  createBudget(formData: any) {
+    return this.http.post(this.apiUrl, formData);
+  }
 }

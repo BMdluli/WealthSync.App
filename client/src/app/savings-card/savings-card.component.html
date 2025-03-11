@@ -32,7 +32,12 @@
 
     <div class="flex justify-evenly items-center">
       <div class="flex flex-col items-center">
-        <p>{{ goal.targetAmount - goal.currentAmount | currency }}</p>
+        <p>
+          {{
+            goal.targetAmount - (goal.targetAmount - goal.currentAmount)
+              | currency
+          }}
+        </p>
         <p class="text-gray-500">Saved</p>
       </div>
 

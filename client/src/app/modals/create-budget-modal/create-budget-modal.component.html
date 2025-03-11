@@ -1,0 +1,73 @@
+@if(isModalOpen) {
+<div
+  class="bg-black/50 absolute inset-0 flex justify-center items-center z-30"
+  (click)="closeModal()"
+>
+  <div
+    class="bg-white w-full mx-4 p-4 rounded-2xl max-w-[500px] z-40"
+    (click)="$event.stopPropagation()"
+  >
+    <h2 class="text-2xl md:text-4xl font-semibold">Create Budget</h2>
+
+    <form
+      #formData="ngForm"
+      (ngSubmit)="handleSubmit(formData)"
+      class="flex flex-col gap-4 mt-4"
+    >
+      <div class="flex flex-col">
+        <label for="name">Name</label>
+        <input
+          class="h-[48px] border-2 border-gray-300 rounded-md p-2 mt-1"
+          type="text"
+          placeholder="March 2026 budget"
+          name="name"
+          [(ngModel)]="budgetModal.name"
+          required
+        />
+      </div>
+
+      <div class="flex flex-col">
+        <label for="startDate">Start Date</label>
+        <input
+          class="h-[48px] border-2 border-gray-300 rounded-md p-2 mt-1"
+          type="date"
+          name="startDate"
+          [(ngModel)]="budgetModal.startDate"
+          required
+        />
+      </div>
+
+      <div class="flex flex-col">
+        <label for="endDate">End Date</label>
+        <input
+          class="h-[48px] border-2 border-gray-300 rounded-md p-2 mt-1"
+          type="date"
+          name="endDate"
+          [(ngModel)]="budgetModal.endDate"
+          required
+        />
+      </div>
+
+      <div class="flex flex-col">
+        <label for="income">Total Income</label>
+        <input
+          class="h-[48px] border-2 border-gray-300 rounded-md p-2 mt-1"
+          type="number"
+          placeholder="20000"
+          name="name"
+          [(ngModel)]="budgetModal.totalIncome"
+          required
+        />
+      </div>
+
+      <button
+        type="submit"
+        class="bg-black text-white w-full h-[40px] rounded-lg cursor-pointer"
+      >
+        Create
+      </button>
+    </form>
+  </div>
+</div>
+
+}

@@ -1,6 +1,6 @@
 <app-header></app-header>
 
-<div class="mx-4 max-w-[1200px] mx-auto">
+<div class="mx-4 max-w-[1200px] md:mx-auto">
   <div class="flex justify-end mt-4">
     <button
       class="bg-black text-white h-[48px] px-4 cursor-pointer"
@@ -10,7 +10,7 @@
     </button>
   </div>
 
-  <div class="grid md:grid-cols-2 gap-4 mt-4">
+  <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
     @for(saving of savings; track saving.id) {
     <app-savings-card [goal]="saving"></app-savings-card>
     }
