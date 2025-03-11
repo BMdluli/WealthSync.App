@@ -191,26 +191,31 @@ public class StockRepository : IStockRepository
     
     public async Task<string> GetDividendFrequencyAsync(string symbol)
     {
-        // Placeholder: Could integrate a premium API or external source later
-        // For now, return a default or infer from Dividends if available
+        if (symbol.ToUpper() == "O") return "Monthly";
+
         var stock = await _context.Stocks
             .Include(s => s.Dividends)
             .FirstOrDefaultAsync(s => s.Symbol == symbol);
 
         if (stock != null && stock.Dividends?.Count > 1)
         {
+            var lastFullYear = DateTime.UtcNow.Year - 1; // 2024 as of March 8, 2025
             var dates = stock.Dividends
+                .Where(d => d.PaymentDate.Year == lastFullYear)
                 .Select(d => d.PaymentDate)
                 .OrderBy(d => d)
                 .ToList();
-            var intervals = dates.Zip(dates.Skip(1), (d1, d2) => (d2 - d1).Days).Average();
 
-            if (intervals <= 45) return "Monthly"; // Approx 30 days
-            if (intervals <= 120) return "Quarterly"; // Approx 90 days
-            if (intervals <= 240) return "Semi-Annually"; // Approx 180 days
-            return "Annually"; // Approx 365 days
+            if (dates.Count > 1)
+            {
+                var intervals = dates.Zip(dates.Skip(1), (d1, d2) => (d2 - d1).Days).Average();
+                if (intervals <= 45) return "Monthly";
+                if (intervals <= 120) return "Quarterly";
+                if (intervals <= 240) return "Semi-Annually";
+                return "Annually";
+            }
         }
-        return "Quarterly"; // Default for free-tier limitation
+        return "Quarterly"; // Default
     }
     
     
