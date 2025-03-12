@@ -1,6 +1,7 @@
 <app-header></app-header>
 
 <div class="mx-4 max-w-[1200px] md:mx-auto">
+  <h1 class="text-2xl md:text-4xl font-bold">Savings</h1>
   <div class="flex justify-end mt-4">
     <button
       class="bg-black text-white h-[48px] px-4 cursor-pointer"
@@ -10,10 +11,16 @@
     </button>
   </div>
 
+  @if(isLoading) {
+  <p>Loading...</p>
+  } @if(savings.length < 1) {
+  <p>No savings yet</p>
+  } @if(savings) {
   <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
     @for(saving of savings; track saving.id) {
     <app-savings-card [goal]="saving"></app-savings-card>
     }
   </div>
+  }
 </div>
 <app-create-goal-modal></app-create-goal-modal>

@@ -22,6 +22,7 @@ import { Goal } from '../../_models/goal';
 export class SavingsComponent implements OnInit {
   isModalOpen = false;
   savings: Goal[] = [];
+  isLoading = false;
 
   constructor(
     private modalService: ModalService,
@@ -40,9 +41,11 @@ export class SavingsComponent implements OnInit {
   }
 
   getSavingsGoals() {
+    this.isLoading = true;
     this.savingsService.getSavingsGoal().subscribe({
       next: (response) => (this.savings = response),
       error: (err) => console.error(err),
+      complete: () => (this.isLoading = false),
     });
   }
 }

@@ -12,6 +12,11 @@
     </button>
   </div>
 
+  @if(isLoading) {
+  <p>Loading...</p>
+  } @if(budgetCategories.length < 1) {
+  <p>No budget Categories yet</p>
+  } @if(budgetCategories.length > 0) {
   <div class="flex gap-4 mt-4 overflow-x-scroll">
     @for(item of budgetCategories; track item.id) {
     <div class="w-[230px]">
@@ -70,6 +75,7 @@
       </table>
     </div>
   </div>
+  }
 </div>
 <app-create-budget-category-modal
   id="{{ id }}"

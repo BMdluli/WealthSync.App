@@ -24,6 +24,7 @@ import { CreateStockModalComponent } from '../../modals/create-stock-modal/creat
 export class StocksComponent {
   stocks: Stock[] = [];
   total: number = 5000;
+  isLoading = false;
 
   isModalOpen = false;
 
@@ -40,9 +41,11 @@ export class StocksComponent {
   }
 
   getStocks() {
+    this.isLoading = true;
     this.stocksService.getStocks().subscribe({
       next: (response) => (this.stocks = response),
       error: (err) => console.error(err),
+      complete: () => (this.isLoading = false),
     });
   }
 
@@ -53,6 +56,7 @@ export class StocksComponent {
         this.getStocks();
       },
       error: (err) => console.error(err),
+      complete: () => (this.isLoading = false),
     });
   }
 

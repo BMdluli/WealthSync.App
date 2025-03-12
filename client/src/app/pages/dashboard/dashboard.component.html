@@ -1,5 +1,10 @@
 <app-header></app-header>
 
+@if (loading) {
+<p class="text-center text-gray-500 text-lg font-semibold mt-4">Loading...</p>
+} @if(savings.length < 1 && budgetItems.length < 1) {
+<p>Nothing to show yet</p>
+} @if(savings.length > 0 || budgetItems.length > 0) {
 <div class="m-4">
   <!-- CARD ROW -->
   <div class="grid grid-cols-2 md:grid-cols-3 gap-2 md:gap-4 min-h-[160px]">
@@ -10,13 +15,13 @@
     </div>
 
     <div class="border-2 border-gray-400 rounded-lg p-2">
-      <img src="/assets/icon-credit-card.png" alt="savings" />
+      <img src="/assets/icon-credit-card.png" alt="budget" />
       <p class="font-semibold">Budget Items created</p>
       <p class="font-bold">{{ budgetItemCount }}</p>
     </div>
 
     <div class="border-2 border-gray-400 rounded-lg p-2">
-      <img src="/assets/icon-bar-chart.png" alt="savings" />
+      <img src="/assets/icon-bar-chart.png" alt="stocks" />
       <p class="font-semibold">Stocks</p>
       <p class="font-bold">R123,456</p>
     </div>
@@ -26,7 +31,7 @@
     <div class="border-2 border-gray-400 p-4 rounded-2xl flex-1">
       <h2 class="uppercase mb-2 font-bold text-2xl">Budget Summary</h2>
       <div class="grid grid-cols-2 gap-4">
-        @for(budget of budgetItems; track budget.id) {
+        @for (budget of budgetItems; track budget.id) {
         <app-budget-card
           title="{{ budget.name }}"
           [income]="budget.totalIncome"
@@ -39,15 +44,11 @@
         }
       </div>
     </div>
+
     <div class="border-2 border-gray-400 p-4 rounded-2xl flex-1">
       <h2 class="uppercase mb-2 font-bold text-2xl">Savings Summary</h2>
       <div class="grid grid-cols-2 gap-6">
-        @for(saving of savings; track saving.id) {
-        <!-- <app-savings-card
-          [goal]="saving"
-          [isOnDashboard]="true"
-        ></app-savings-card> -->
-
+        @for (saving of savings; track saving.id) {
         <app-budget-card
           title="{{ saving.name }}"
           [income]="saving.targetAmount - saving.currentAmount"
@@ -59,3 +60,4 @@
     </div>
   </div>
 </div>
+}

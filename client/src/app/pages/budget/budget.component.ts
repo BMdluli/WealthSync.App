@@ -21,6 +21,7 @@ import { BudgetExpenseCardComponent } from './budget-expense-card/budget-expense
 })
 export class BudgetComponent implements OnInit {
   budgetItems: Budget[] = [];
+  isLoading = false;
   constructor(
     private budgetService: BudgetService,
     private modalService: ModalService
@@ -31,9 +32,11 @@ export class BudgetComponent implements OnInit {
   }
 
   getBudgets() {
+    this.isLoading = true;
     this.budgetService.getbudgetItems().subscribe({
       next: (response) => (this.budgetItems = response),
       error: (err) => console.error(err),
+      complete: () => (this.isLoading = false),
     });
   }
 

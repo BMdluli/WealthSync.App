@@ -26,6 +26,7 @@ export class BudgetCategoryComponent implements OnInit {
   budgetCategories: BudgetCategory[] = [];
   isBudgetModalOpen = false;
   isExpenseModalOpen = false;
+  isLoading = false;
 
   constructor(
     private budgetCategoryService: BudgetCategoryService,
@@ -47,9 +48,11 @@ export class BudgetCategoryComponent implements OnInit {
   }
 
   getBudgetCategories() {
+    this.isLoading = true;
     this.budgetCategoryService.getBudgetCategories(this.id!).subscribe({
       next: (response) => (this.budgetCategories = response),
       error: (err) => console.error(err),
+      complete: () => (this.isLoading = false),
     });
   }
 
