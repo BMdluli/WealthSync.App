@@ -8,15 +8,24 @@ import { NotFoundComponent } from './pages/not-found/not-found.component';
 import { RegisterComponent } from './pages/register/register.component';
 import { LoginComponent } from './pages/login/login.component';
 import { BudgetCategoryComponent } from './pages/budget/budget-category/budget-category.component';
+import { authGuard } from './auth-guard.guard';
 
 export const routes: Routes = [
-  { path: '', component: HomeComponent },
-  { path: 'dashboard', component: DashboardComponent },
-  { path: 'savings', component: SavingsComponent },
-  { path: 'budget', component: BudgetComponent },
-  { path: 'budget/:id', component: BudgetCategoryComponent },
-  { path: 'stocks', component: StocksComponent },
-  { path: 'register', component: RegisterComponent },
-  { path: 'login', component: LoginComponent },
-  { path: '**', component: NotFoundComponent },
+  { path: '', component: HomeComponent }, // Public
+  {
+    path: 'dashboard',
+    component: DashboardComponent,
+    canActivate: [authGuard],
+  },
+  { path: 'savings', component: SavingsComponent, canActivate: [authGuard] },
+  { path: 'budget', component: BudgetComponent, canActivate: [authGuard] },
+  {
+    path: 'budget/:id',
+    component: BudgetCategoryComponent,
+    canActivate: [authGuard],
+  },
+  { path: 'stocks', component: StocksComponent, canActivate: [authGuard] },
+  { path: 'register', component: RegisterComponent }, // Public
+  { path: 'login', component: LoginComponent }, // Public
+  { path: '**', component: NotFoundComponent, canActivate: [authGuard] }, // Protected
 ];

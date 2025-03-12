@@ -7,6 +7,5 @@ export const AuthInterceptorService: HttpInterceptorFn = (req, next) => {
     },
   });
 
-  console.log('Intercepted Request:', authReq);
   return next(authReq);
 };
