@@ -17,4 +17,8 @@ export class BudgetService {
   createBudget(formData: any) {
     return this.http.post(this.apiUrl, formData);
   }
+
+  deleteBudget(id: any) {
+    return this.http.delete(`${this.apiUrl}/${id}`);
+  }
 }

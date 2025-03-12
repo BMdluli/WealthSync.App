@@ -6,10 +6,16 @@ import { BudgetService } from '../../_services/budget.service';
 import { Budget } from '../../_models/budget';
 import { ModalService } from '../../_services/modal.service';
 import { CreateBudgetModalComponent } from '../../modals/create-budget-modal/create-budget-modal.component';
+import { BudgetExpenseCardComponent } from './budget-expense-card/budget-expense-card.component';
 @Component({
   selector: 'app-budget',
   standalone: true,
-  imports: [HeaderComponent, BudgetCardComponent, CreateBudgetModalComponent],
+  imports: [
+    HeaderComponent,
+    BudgetCardComponent,
+    CreateBudgetModalComponent,
+    BudgetExpenseCardComponent,
+  ],
   templateUrl: './budget.component.html',
   styleUrl: './budget.component.scss',
 })
