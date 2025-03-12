@@ -1,16 +1,19 @@
 <div
   class="rounded-lg border-2 border-gray-300 h-[180px] flex flex-col justify-between p-4"
 >
-  <a routerLink="{{ id }}" class="text-sm font-bold">{{ title }}</a>
+  <a routerLink="{{ id }}" class="text-sm font-bold">{{ title }} TEST</a>
 
-  <div>
+  <div class="flex flex-col">
     <p class="text-2xl font-bold">{{ income | currency }}</p>
 
     <p class="text-gray-500 text-sm">{{ subTitle }}</p>
   </div>
 
   <div class="flex gap-2">
-    <button class="bg-yellow-400 px-2 py-1 text-white cursor-pointer">
+    <button
+      class="bg-yellow-400 px-2 py-1 text-white cursor-pointer"
+      (click)="openModal()"
+    >
       <img src="assets/icon-edit.png" alt="edit" />
     </button>
     <button
@@ -21,3 +24,5 @@
     </button>
   </div>
 </div>
+
+<app-edit-budget-modal></app-edit-budget-modal>

@@ -18,6 +18,10 @@ export class BudgetService {
     return this.http.post(this.apiUrl, formData);
   }
 
+  updateBudget(id: any, formData: any) {
+    return this.http.put(`${this.apiUrl}/${id}`, formData);
+  }
+
   deleteBudget(id: any) {
     return this.http.delete(`${this.apiUrl}/${id}`);
   }

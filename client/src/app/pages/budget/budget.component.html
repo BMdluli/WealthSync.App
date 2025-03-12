@@ -14,7 +14,9 @@
     <app-budget-card
       title="{{ budget.name }}"
       [income]="budget.totalIncome"
-      subTitle="{{ budget.endDate }} Income"
+      subTitle="Income"
+      [startDate]="budget.startDate"
+      [endDate]="budget.endDate"
       [id]="budget.id"
     ></app-budget-card>
     }
