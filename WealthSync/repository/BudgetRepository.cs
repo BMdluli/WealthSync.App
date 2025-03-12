@@ -41,11 +41,18 @@ public class BudgetRepository : IBudgetRepository
             .FirstOrDefaultAsync();
     }
 
-    public async Task<IEnumerable<Budget>> GetByUserIdAsync(string userId)
+    public async Task<IEnumerable<Budget>> GetByUserIdAsync(string userId, int? limit)
     {
-        return await _context.Budgets
+        var budgets =  _context.Budgets
             .Where(b => b.AppUserId == userId)
-            .ToListAsync();
+            .AsQueryable();
+
+        if (limit.HasValue)
+        {
+            budgets = budgets.Take(limit.Value);
+        }
+        
+        return await budgets.ToListAsync();
     }
 
     public async Task AddAsync(Budget entity)

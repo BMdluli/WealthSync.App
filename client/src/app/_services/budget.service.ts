@@ -14,6 +14,10 @@ export class BudgetService {
     return this.http.get<Budget[]>(this.apiUrl);
   }
 
+  getbudgetItemsLimit() {
+    return this.http.get<Budget[]>(`${this.apiUrl}?limit=6`);
+  }
+
   createBudget(formData: any) {
     return this.http.post(this.apiUrl, formData);
   }

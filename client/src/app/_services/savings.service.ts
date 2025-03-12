@@ -18,6 +18,10 @@ export class SavingsService {
     return this.http.get<Goal[]>(this.apiUrl);
   }
 
+  getSavingsGoalLimit() {
+    return this.http.get<Goal[]>(`${this.apiUrl}?limit=6`);
+  }
+
   updateSavingsGoal(id: any, formData: any) {
     return this.http.put(`${this.apiUrl}/${id}`, formData);
   }

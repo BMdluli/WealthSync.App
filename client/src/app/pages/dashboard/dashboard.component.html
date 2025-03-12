@@ -2,33 +2,58 @@
 
 <div class="m-4">
   <!-- CARD ROW -->
-  <div class="grid grid-cols-2 md:grid-cols-3 gap-2 md:gap-4 h-[160px]">
-    <div class="bg-rose-300 rounded-lg p-2">
+  <div class="grid grid-cols-2 md:grid-cols-3 gap-2 md:gap-4 min-h-[160px]">
+    <div class="border-2 border-gray-400 rounded-lg p-2">
       <img src="/assets/icon-wallet.png" alt="savings" />
       <p class="font-semibold">Savings</p>
       <p class="font-bold">R{{ totalSavings }}</p>
     </div>
 
-    <div class="bg-rose-300 rounded-lg p-2">
+    <div class="border-2 border-gray-400 rounded-lg p-2">
       <img src="/assets/icon-credit-card.png" alt="savings" />
-      <p class="font-semibold">Budget</p>
-      <p class="font-bold">R123,456</p>
+      <p class="font-semibold">Budget Items created</p>
+      <p class="font-bold">{{ budgetItemCount }}</p>
     </div>
 
-    <div class="bg-rose-300 rounded-lg p-2">
+    <div class="border-2 border-gray-400 rounded-lg p-2">
       <img src="/assets/icon-bar-chart.png" alt="savings" />
       <p class="font-semibold">Stocks</p>
       <p class="font-bold">R123,456</p>
     </div>
   </div>
 
-  <div class="grid md:grid-cols-2 mt-6">
-    <div></div>
-    <div class="border-2 border-gray-400 p-4 rounded-2xl">
-      <h2 class="uppercase mb-2 font-bold text-2xl">Savings</h2>
-      <div class="flex flex-col gap-4">
+  <div class="flex flex-col md:flex-row mt-6 gap-5">
+    <div class="border-2 border-gray-400 p-4 rounded-2xl flex-1">
+      <h2 class="uppercase mb-2 font-bold text-2xl">Budget Summary</h2>
+      <div class="grid grid-cols-2 gap-4">
+        @for(budget of budgetItems; track budget.id) {
+        <app-budget-card
+          title="{{ budget.name }}"
+          [income]="budget.totalIncome"
+          subTitle="Income"
+          [startDate]="budget.startDate"
+          [endDate]="budget.endDate"
+          [id]="budget.id"
+          [isOnDashboard]="true"
+        ></app-budget-card>
+        }
+      </div>
+    </div>
+    <div class="border-2 border-gray-400 p-4 rounded-2xl flex-1">
+      <h2 class="uppercase mb-2 font-bold text-2xl">Savings Summary</h2>
+      <div class="grid grid-cols-2 gap-6">
         @for(saving of savings; track saving.id) {
-        <app-savings-card [goal]="saving"></app-savings-card>
+        <!-- <app-savings-card
+          [goal]="saving"
+          [isOnDashboard]="true"
+        ></app-savings-card> -->
+
+        <app-budget-card
+          title="{{ saving.name }}"
+          [income]="saving.targetAmount - saving.currentAmount"
+          subTitle="Savings Goal"
+          [isOnDashboard]="true"
+        ></app-budget-card>
         }
       </div>
     </div>

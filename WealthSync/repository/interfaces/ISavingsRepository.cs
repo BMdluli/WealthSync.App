@@ -6,7 +6,7 @@ namespace WealthSync.repository.interfaces
     public interface ISavingsRepository : IRepository<Saving>
     {
 
-        Task<IEnumerable<Saving>> GetByUserIdAsync(string userId);
+        Task<IEnumerable<Saving>> GetByUserIdAsync(string userId, int? limit);
         Task<Saving> GetByIdForUserAsync(int id, string userId);
     }
 }

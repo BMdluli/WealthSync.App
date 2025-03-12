@@ -28,6 +28,7 @@ export class SavingsCardComponent {
     startDate: new Date(),
     targetDate: new Date(),
   };
+  @Input() isOnDashboard = false;
   isOpen = false;
   isEditOpen = false;
 

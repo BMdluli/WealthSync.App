@@ -4,26 +4,40 @@ import { SidebarComponent } from '../../sidebar/sidebar.component';
 import { SavingsService } from '../../_services/savings.service';
 import { Goal } from '../../_models/goal';
 import { SavingsCardComponent } from '../../savings-card/savings-card.component';
+import { BudgetService } from '../../_services/budget.service';
+import { Budget } from '../../_models/budget';
+import { BudgetCardComponent } from '../budget/budget-card/budget-card.component';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [HeaderComponent, SidebarComponent, SavingsCardComponent],
+  imports: [
+    HeaderComponent,
+    SidebarComponent,
+    SavingsCardComponent,
+    BudgetCardComponent,
+  ],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss',
 })
 export class DashboardComponent implements OnInit {
   totalSavings = 0;
   savings: Goal[] = [];
+  budgetItemCount: number = 0;
+  budgetItems: Budget[] = [];
 
-  constructor(private savingsService: SavingsService) {}
+  constructor(
+    private savingsService: SavingsService,
+    private budgetService: BudgetService
+  ) {}
 
   ngOnInit(): void {
     this.getSavingsAmount();
+    this.getBudgetItems();
   }
 
   getSavingsAmount() {
-    this.savingsService.getSavingsGoal().subscribe({
+    this.savingsService.getSavingsGoalLimit().subscribe({
       next: (response) => {
         this.savings = response;
         if (Array.isArray(response)) {
@@ -33,6 +47,16 @@ export class DashboardComponent implements OnInit {
             }
           });
         }
+      },
+      error: (err) => console.error(err),
+    });
+  }
+
+  getBudgetItems() {
+    this.budgetService.getbudgetItemsLimit().subscribe({
+      next: (response) => {
+        this.budgetItemCount = response.length;
+        this.budgetItems = response;
       },
       error: (err) => console.error(err),
     });

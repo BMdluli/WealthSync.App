@@ -33,12 +33,20 @@ public class SavingsRepository : ISavingsRepository
             .FirstOrDefaultAsync(s => s.Id == id && s.AppUserId == userId);
     }
 
-    public async Task<IEnumerable<Saving>> GetByUserIdAsync(string userId)
+    public async Task<IEnumerable<Saving>> GetByUserIdAsync(string userId, int? limit)
     {
-        return await _context.Savings
+        var savings =  _context.Savings
             .Include(s => s.Contributions)
             .Where(s => s.AppUserId == userId)
-            .ToListAsync();
+            .AsQueryable();
+
+        if (limit.HasValue)
+        {
+            savings = savings.Take(limit.Value);
+        }
+        
+        return await savings.ToListAsync();
+        
     }
 
     public async Task AddAsync(Saving entity)

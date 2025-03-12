@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, input, Input, OnInit } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { CreateExpenseModalComponent } from '../../../modals/create-expense-modal/create-expense-modal.component';
 import { BudgetService } from '../../../_services/budget.service';
@@ -20,6 +20,7 @@ export class BudgetCardComponent implements OnInit {
   @Input() endDate: Date = new Date();
   @Input() subTitle: string = '';
   @Input() id: number = 0;
+  @Input() isOnDashboard = false;
 
   isEditOpen = false;
 

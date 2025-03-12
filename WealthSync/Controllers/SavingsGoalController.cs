@@ -21,12 +21,12 @@ public class SavingsGoalController : ControllerBase
 
     // GET: api/SavingsGoal
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<SavingsGoalDto>>> GetSavingsGoals()
+    public async Task<ActionResult<IEnumerable<SavingsGoalDto>>> GetSavingsGoals(int? limit)
     {
         var userId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
         if (userId == null) return Unauthorized();
 
-        var goals = await _savingsGoalRepository.GetByUserIdAsync(userId);
+        var goals = await _savingsGoalRepository.GetByUserIdAsync(userId, limit);
         var goalDtos = goals.Select(g => new SavingsGoalDto
         {
             Id = g.Id,

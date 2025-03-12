@@ -20,12 +20,12 @@ public class BudgetController : ControllerBase
 
     // GET: api/Budget
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<BudgetDto>>> GetBudgets()
+    public async Task<ActionResult<IEnumerable<BudgetDto>>> GetBudgets(int? limit)
     {
         var userId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
         if (userId == null) return Unauthorized();
 
-        var budgets = await _budgetRepository.GetByUserIdAsync(userId);
+        var budgets = await _budgetRepository.GetByUserIdAsync(userId, limit);
         var budgetDtos = budgets.Select(b => new BudgetDto
         {
             Id = b.Id,
