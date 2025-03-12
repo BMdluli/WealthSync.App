@@ -5,6 +5,7 @@ import { CommonModule } from '@angular/common';
 import { SavingsService } from '../_services/savings.service';
 import { AddContributionModalComponent } from '../modals/add-contribution-modal/add-contribution-modal.component';
 import { ModalService } from '../_services/modal.service';
+import { EditSavingsGoalComponent } from '../modals/edit-savings-goal/edit-savings-goal.component';
 
 @Component({
   selector: 'app-savings-card',
@@ -13,6 +14,7 @@ import { ModalService } from '../_services/modal.service';
     NgCircleProgressModule,
     CommonModule,
     AddContributionModalComponent,
+    EditSavingsGoalComponent,
   ],
   templateUrl: './savings-card.component.html',
   styleUrl: './savings-card.component.scss',
@@ -27,6 +29,7 @@ export class SavingsCardComponent {
     targetDate: new Date(),
   };
   isOpen = false;
+  isEditOpen = false;
 
   radius = 40; // Radius of the circle
   circumference = 2 * Math.PI * this.radius; // Full circle length
@@ -48,12 +51,27 @@ export class SavingsCardComponent {
     this.modalService.getModalState('contributionModal').subscribe((isOpen) => {
       this.isOpen = isOpen;
     });
+    this.modalService
+      .getModalState('contributionModal')
+      .subscribe((isEditOpen) => {
+        this.isEditOpen = isEditOpen;
+      });
     // console.log(this.id);
   }
 
   openModal() {
     this.modalService.openModal('contributionModal', {
       budgetCategoryId: this.goal.id,
+    });
+  }
+
+  openEditModal() {
+    this.modalService.openModal('editGoalModal', {
+      id: this.goal.id,
+      name: this.goal.name,
+      targetAmount: this.goal.targetAmount,
+      startDate: this.goal.startDate,
+      targetDate: this.goal.targetDate,
     });
   }
 
@@ -65,7 +83,9 @@ export class SavingsCardComponent {
   // window.location.reload()
   deleteGoal() {
     this.savingsService.deleteSavingsGoal(this.goal.id).subscribe({
-      next: (_) => console.log('Goal deleted successfully'),
+      next: (_) => {
+        console.log('Goal deleted successfully');
+      },
       error: (err) => console.error(err),
     });
   }

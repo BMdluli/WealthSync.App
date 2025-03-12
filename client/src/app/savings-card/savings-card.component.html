@@ -61,16 +61,24 @@
         class="bg-green-500 p-2 text-white font-semibold cursor-pointer"
         (click)="openModal()"
       >
-        Add contribution
+        <img src="assets/icon-plus.png" alt="add" />
+      </button>
+
+      <button
+        class="bg-yellow-400 px-2 py-1 text-white cursor-pointer"
+        (click)="openEditModal()"
+      >
+        <img src="assets/icon-edit.png" alt="edit" />
       </button>
 
       <button
         class="bg-red-500 p-2 text-white font-semibold cursor-pointer"
         (click)="deleteGoal()"
       >
-        Delete Goal
+        <img src="assets/icon-trash.png" alt="add" />
       </button>
     </div>
   </div>
 </div>
 <app-add-contribution-modal id="{{ goal.id }}"></app-add-contribution-modal>
+<app-edit-savings-goal></app-edit-savings-goal>

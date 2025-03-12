@@ -1,0 +1,74 @@
+@if(isModalOpen) {
+<div
+  class="bg-black/50 absolute inset-0 flex justify-center items-center z-40"
+  (click)="closeModal()"
+>
+  <div
+    class="bg-white w-full mx-4 p-4 rounded-2xl max-w-[500px]"
+    (click)="$event.stopPropagation()"
+  >
+    <h2 class="text-2xl md:text-4xl font-semibold">Edit Goal</h2>
+
+    <form
+      #goalForm="ngForm"
+      (ngSubmit)="handleSubmit(goalForm)"
+      class="flex flex-col gap-4 mt-4"
+    >
+      <div class="flex flex-col">
+        <label for="name">Name</label>
+        <input
+          class="h-[48px] border-2 border-gray-300 rounded-md p-2 mt-1"
+          type="text"
+          placeholder="Trip to Cancun"
+          name="name"
+          [(ngModel)]="goalModel.name"
+          required
+        />
+      </div>
+
+      <div class="flex flex-col">
+        <label for="amount">Target Amount</label>
+        <input
+          class="h-[48px] border-2 border-gray-300 rounded-md p-2 mt-1"
+          type="number"
+          placeholder="Trip to Cancun"
+          name="amount"
+          [(ngModel)]="goalModel.targetAmount"
+          required
+        />
+      </div>
+
+      <div class="flex flex-col">
+        <label for="start">Start Date</label>
+        <input
+          class="h-[48px] border-2 border-gray-300 rounded-md p-2 mt-1"
+          type="date"
+          placeholder="Trip to Cancun"
+          name="start"
+          [(ngModel)]="goalModel.startDate"
+          required
+        />
+      </div>
+
+      <div class="flex flex-col">
+        <label for="end">Target Date</label>
+        <input
+          class="h-[48px] border-2 border-gray-300 rounded-md p-2 mt-1"
+          type="date"
+          name="end"
+          [(ngModel)]="goalModel.targetDate"
+          required
+        />
+      </div>
+
+      <button
+        type="submit"
+        class="bg-black text-white w-full h-[40px] rounded-lg cursor-pointer"
+      >
+        Create
+      </button>
+    </form>
+  </div>
+</div>
+
+}

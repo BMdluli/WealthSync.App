@@ -18,6 +18,10 @@ export class SavingsService {
     return this.http.get<Goal[]>(this.apiUrl);
   }
 
+  updateSavingsGoal(id: any, formData: any) {
+    return this.http.put(`${this.apiUrl}/${id}`, formData);
+  }
+
   deleteSavingsGoal(id: any) {
     return this.http.delete(`${this.apiUrl}/${id}`);
   }
