@@ -49,7 +49,12 @@ namespace WealthSync.Controllers
                 return BadRequest(result.Errors);
             }
 
-            return Ok("User created successfully");
+            var response = new
+            {
+                message = "User created successfully"
+            };
+
+            return Ok(response);
         }
 
         [HttpPost("login")]
