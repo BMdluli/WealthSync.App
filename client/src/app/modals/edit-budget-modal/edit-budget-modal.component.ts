@@ -42,14 +42,12 @@ export class EditBudgetModalComponent {
 
   handleSubmit(form: any) {
     if (form.valid) {
-      // this.budgetService.createBudget(this.budgetModal).subscribe({
-      //   next: () => {
-      //     console.log('Budget created successfully');
-      //     this.closeModal();
-      //   },
-      //   error: (error) => console.error(error),
-      // });
-      this.budgetService.updateBudget(this.id, this.budgetModal).subscribe({
+      const budgetData = {
+        ...this.budgetModal,
+        startDate: new Date(this.budgetModal.startDate).toISOString(),
+        endDate: new Date(this.budgetModal.endDate).toISOString(),
+      };
+      this.budgetService.updateBudget(this.id, budgetData).subscribe({
         next: () => {
           console.log('Budget updated successfully');
           this.closeModal();

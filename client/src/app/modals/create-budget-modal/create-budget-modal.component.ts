@@ -33,14 +33,20 @@ export class CreateBudgetModalComponent {
 
   handleSubmit(form: any) {
     if (form.valid) {
-      this.budgetService.createBudget(this.budgetModal).subscribe({
+      const budgetData = {
+        ...this.budgetModal,
+        startDate: new Date(this.budgetModal.startDate).toISOString(),
+        endDate: new Date(this.budgetModal.endDate).toISOString(),
+      };
+
+      this.budgetService.createBudget(budgetData).subscribe({
         next: () => {
           console.log('Budget created successfully');
           this.closeModal();
         },
         error: (error) => console.error(error),
       });
-      console.log(this.budgetModal);
+      console.log(budgetData);
     }
   }
 

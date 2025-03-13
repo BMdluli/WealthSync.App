@@ -16,8 +16,8 @@ export class CreateGoalModalComponent implements OnInit {
   goalModel = {
     name: '',
     targetAmount: '',
-    startDate: '',
-    targetDate: '',
+    startDate: Date(),
+    targetDate: Date(),
   };
 
   constructor(
@@ -33,7 +33,12 @@ export class CreateGoalModalComponent implements OnInit {
 
   handleSubmit(form: any) {
     if (form.valid) {
-      this.goalService.createSavingsGoal(this.goalModel).subscribe({
+      const goalData = {
+        ...this.goalModel,
+        startDate: new Date(this.goalModel.startDate).toISOString(),
+        targetDate: new Date(this.goalModel.targetDate).toISOString(),
+      };
+      this.goalService.createSavingsGoal(goalData).subscribe({
         next: () => console.log('Goal Added successfully'),
         error: (error) => console.error(error),
       });

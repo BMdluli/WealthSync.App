@@ -1,12 +1,13 @@
+
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
+
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
+using Microsoft.EntityFrameworkCore;
 using WealthSync.Data;
 using WealthSync.Models;
-using WealthSync.repository;
 using WealthSync.repository.interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -52,11 +53,13 @@ builder.Services.AddSwaggerGen(options =>
     });
 });
 
-builder.Services.AddDbContext<AppDbContext>(options =>
-{
-    options.UseSqlite(builder.Configuration.GetConnectionString("Default"));
-});
+// builder.Services.AddDbContext<AppDbContext>(options =>
+// {
+//     options.UseSqlite(builder.Configuration.GetConnectionString("Default"));
+// });
 
+builder.Services.AddDbContext<AppDbContext>(options =>
+    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 // Identity
 builder.Services.AddIdentity<AppUser, AppRole>(options =>

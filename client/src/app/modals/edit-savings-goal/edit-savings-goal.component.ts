@@ -46,7 +46,12 @@ export class EditSavingsGoalComponent {
 
   handleSubmit(form: any) {
     if (form.valid) {
-      this.goalService.updateSavingsGoal(this.id, this.goalModel).subscribe({
+      const savingsData = {
+        ...this.goalModel,
+        startDate: new Date(this.goalModel.startDate).toISOString(),
+        endDate: new Date(this.goalModel.targetDate).toISOString(),
+      };
+      this.goalService.updateSavingsGoal(this.id, savingsData).subscribe({
         next: (_) => {
           console.log('Goal updated successfully');
           this.closeModal();

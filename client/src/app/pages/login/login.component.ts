@@ -3,6 +3,7 @@ import { AuthService } from '../../_services/auth.service';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-login',
@@ -17,13 +18,18 @@ export class LoginComponent {
     password: 'Password123$$',
   };
 
-  constructor(private authService: AuthService, private router: Router) {}
+  constructor(
+    private authService: AuthService,
+    private router: Router,
+    private toastr: ToastrService
+  ) {}
 
   submitForm(form: any) {
     if (form.valid) {
       this.authService.loginUser(this.user).subscribe(
         (response) => {
           this.saveToken(response.token);
+          this.toastr.success('Login Successful');
           this.router.navigate(['dashboard']);
         },
         (error) => {

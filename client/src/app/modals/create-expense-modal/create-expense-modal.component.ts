@@ -41,7 +41,11 @@ export class CreateExpenseModalComponent {
 
   handleSubmit(form: any) {
     if (form.valid) {
-      this.expenseService.createExpense(this.expenseModal).subscribe({
+      const expenseData = {
+        ...this.expenseModal,
+        startDate: new Date(this.expenseModal.date).toISOString(),
+      };
+      this.expenseService.createExpense(expenseData).subscribe({
         next: () => {
           console.log('created created successfully');
           this.closeModal();

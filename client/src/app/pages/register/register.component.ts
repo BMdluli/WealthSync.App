@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { AuthService } from '../../_services/auth.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-register',
@@ -17,13 +18,17 @@ export class RegisterComponent {
     password: '',
   };
 
-  constructor(private authService: AuthService) {}
+  constructor(
+    private authService: AuthService,
+    private toastr: ToastrService
+  ) {}
 
   submitForm(form: any) {
     if (form.valid) {
       this.authService.registerUser(this.user).subscribe(
         (response) => {
           console.log(response);
+          this.toastr.success('User created successfully');
         },
         (error) => {
           console.error(error);
