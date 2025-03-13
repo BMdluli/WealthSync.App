@@ -9,6 +9,7 @@ import { RegisterComponent } from './pages/register/register.component';
 import { LoginComponent } from './pages/login/login.component';
 import { BudgetCategoryComponent } from './pages/budget/budget-category/budget-category.component';
 import { authGuard } from './auth-guard.guard';
+import { ServerErrorComponent } from './pages/server-error/server-error.component';
 
 export const routes: Routes = [
   { path: '', component: HomeComponent }, // Public
@@ -27,5 +28,6 @@ export const routes: Routes = [
   { path: 'stocks', component: StocksComponent, canActivate: [authGuard] },
   { path: 'register', component: RegisterComponent }, // Public
   { path: 'login', component: LoginComponent }, // Public
+  { path: 'server-error', component: ServerErrorComponent }, // Public
   { path: '**', component: NotFoundComponent, canActivate: [authGuard] }, // Protected
 ];

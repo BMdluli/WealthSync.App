@@ -1,12 +1,12 @@
 import { Component } from '@angular/core';
+import { HeaderComponent } from '../../header/header.component';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-server-error',
   standalone: true,
-  imports: [],
+  imports: [HeaderComponent, RouterModule],
   templateUrl: './server-error.component.html',
-  styleUrl: './server-error.component.scss'
+  styleUrl: './server-error.component.scss',
 })
-export class ServerErrorComponent {
-
-}
+export class ServerErrorComponent {}
