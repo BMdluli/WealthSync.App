@@ -22,14 +22,18 @@
   <!-- TOP SECTION -->
   <div class="flex flex-col md:flex-row md:justify-between gap-4">
     <div class="flex items-end gap-2">
-      <h1 class="text-2xl font-bold">${{ total }}</h1>
-      <span class="text-xs bg-gray-300 rounded-sm px-1">$495.533</span>
+      <h1 class="text-2xl font-bold">{{ total | currency }}</h1>
+      <span
+        [ngClass]="gain > 0 ? 'bg-green-500' : 'bg-red-500'"
+        class="text-xs rounded-sm px-1 text-white font-bold"
+        >{{ gain | currency }}</span
+      >
     </div>
   </div>
 
   <!-- Summary -->
   <div
-    class="border-1 border-gray-200 rounded-lg px-4 md:grid md:grid-cols-2 lg:grid-cols-4 gap-4 mt-4"
+    class="border-1 border-gray-200 rounded-lg px-4 md:grid md:grid-cols-2 gap-4 mt-4"
   >
     <app-stock-card
       title="Portfolio yield"
@@ -39,19 +43,7 @@
 
     <app-stock-card
       title="Annual Income"
-      value="${{ calculateAnnualIncome().toFixed(2) }}"
-      imgaeUrl="assets/icon-wallet.png"
-    ></app-stock-card>
-
-    <app-stock-card
-      title="Portfolio yield"
-      value="0.84%"
-      imgaeUrl="assets/icon-wallet.png"
-    ></app-stock-card>
-
-    <app-stock-card
-      title="Portfolio yield"
-      value="0.84%"
+      value="${{ annualIncome }}"
       imgaeUrl="assets/icon-wallet.png"
     ></app-stock-card>
   </div>
