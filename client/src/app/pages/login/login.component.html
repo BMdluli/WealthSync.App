@@ -62,9 +62,11 @@
       <button
         class="bg-black h-[46px] text-white rounded-md cursor-pointer"
         type="submit"
-        [disabled]="loginForm.invalid"
+        [disabled]="loginForm.invalid || loading"
       >
-        Login
+        @if(loading) {
+        <app-spinner></app-spinner>
+        } @else { Login }
       </button>
     </form>
   </div>

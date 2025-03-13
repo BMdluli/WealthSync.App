@@ -40,7 +40,7 @@
         <input
           class="h-[48px] border-2 border-gray-300 rounded-md p-2 mt-1"
           type="text"
-          placeholder="Captain Jack Sparrow"
+          placeholder="Jack"
           name="username"
           [(ngModel)]="user.username"
           #usernameCtrl="ngModel"
@@ -90,9 +90,11 @@
       <button
         class="bg-black h-[46px] text-white rounded-md cursor-pointer"
         type="submit"
-        [disabled]="registerForm.invalid"
+        [disabled]="registerForm.invalid || loading"
       >
-        Register
+        @if(loading) {
+        <app-spinner></app-spinner>
+        } @else { Register }
       </button>
     </form>
   </div>
