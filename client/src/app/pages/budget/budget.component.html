@@ -11,10 +11,10 @@
   </div>
 
   @if(isLoading) {
-  <p class="text-4xl">Loading...</p>
-  } @if(budgetItems.length < 1) {
+  <app-loader></app-loader>
+  } @else if(budgetItems.length < 1) {
   <p>EMPTY</p>
-  } @if(budgetItems) {
+  } @else if(budgetItems) {
   <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
     @for(budget of budgetItems; track budget.id) {
     <app-budget-card

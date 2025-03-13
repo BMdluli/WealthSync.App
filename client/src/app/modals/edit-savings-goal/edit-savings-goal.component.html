@@ -65,7 +65,9 @@
         type="submit"
         class="bg-black text-white w-full h-[40px] rounded-lg cursor-pointer"
       >
-        Create
+        @if(loading) {
+        <app-spinner></app-spinner>
+        } @else { Edit Goal }
       </button>
     </form>
   </div>

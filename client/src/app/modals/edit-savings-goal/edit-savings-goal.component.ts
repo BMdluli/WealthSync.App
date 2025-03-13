@@ -3,17 +3,20 @@ import { SavingsService } from '../../_services/savings.service';
 import { ModalService } from '../../_services/modal.service';
 import { FormsModule } from '@angular/forms';
 import { Goal } from '../../_models/goal';
+import { SpinnerComponent } from '../../spinner/spinner.component';
+import { ToastrService } from 'ngx-toastr';
+import { RefreshService } from '../../_services/refresh.service';
 
 @Component({
   selector: 'app-edit-savings-goal',
   standalone: true,
-  imports: [FormsModule],
+  imports: [FormsModule, SpinnerComponent],
   templateUrl: './edit-savings-goal.component.html',
   styleUrl: './edit-savings-goal.component.scss',
 })
 export class EditSavingsGoalComponent {
   id = 0;
-
+  loading = false;
   isModalOpen = false;
 
   goalModel = {
@@ -25,7 +28,9 @@ export class EditSavingsGoalComponent {
 
   constructor(
     private goalService: SavingsService,
-    private modalService: ModalService
+    private modalService: ModalService,
+    private toasr: ToastrService,
+    private refreshService: RefreshService
   ) {}
 
   ngOnInit() {
@@ -45,6 +50,7 @@ export class EditSavingsGoalComponent {
   }
 
   handleSubmit(form: any) {
+    this.loading = true;
     if (form.valid) {
       const savingsData = {
         ...this.goalModel,
@@ -53,10 +59,12 @@ export class EditSavingsGoalComponent {
       };
       this.goalService.updateSavingsGoal(this.id, savingsData).subscribe({
         next: (_) => {
-          console.log('Goal updated successfully');
+          this.toasr.success('Goal updated successfully');
           this.closeModal();
+          this.refreshService.refreshPage();
         },
         error: (err) => console.error(err),
+        complete: () => (this.loading = false),
       });
       console.log(this.goalModel);
     }

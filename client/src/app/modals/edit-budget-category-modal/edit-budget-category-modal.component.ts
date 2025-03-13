@@ -3,16 +3,20 @@ import { BudgetCategoryService } from '../../_services/budget-category.service';
 import { ModalService } from '../../_services/modal.service';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
+import { SpinnerComponent } from '../../spinner/spinner.component';
+import { ToastrService } from 'ngx-toastr';
+import { RefreshService } from '../../_services/refresh.service';
 
 @Component({
   selector: 'app-edit-budget-category-modal',
   standalone: true,
-  imports: [FormsModule],
+  imports: [FormsModule, SpinnerComponent],
   templateUrl: './edit-budget-category-modal.component.html',
   styleUrl: './edit-budget-category-modal.component.scss',
 })
 export class EditBudgetCategoryModalComponent {
   isModalOpen = false;
+  loading = false;
 
   budgetCategoryModel = {
     budgetId: '',
@@ -26,7 +30,9 @@ export class EditBudgetCategoryModalComponent {
   constructor(
     private budgetCategoryService: BudgetCategoryService,
     private modalService: ModalService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private toasr: ToastrService,
+    private refreshService: RefreshService
   ) {}
 
   ngOnInit() {
@@ -44,20 +50,18 @@ export class EditBudgetCategoryModalComponent {
           this.budgetCategoryId = modalData.budgetCategoryId;
         }
       });
-
-    // console.log('ID _> ', this.id);
-    // console.log('Budget Category ID ', this.budgetCategoryModel.budgetId);
   }
 
   handleSubmit(form: any) {
+    this.loading = true;
     if (form.valid) {
-      // this.budgetCategoryModel.budgetId = this.id!;
       this.budgetCategoryService
         .editBudgetCategory(this.budgetCategoryId, this.budgetCategoryModel)
         .subscribe({
           next: () => {
-            console.log('Budget Category Edited successfully');
+            this.toasr.success('Budget Category Edited successfully');
             this.closeModal();
+            this.refreshService.refreshPage();
           },
           error: (error) => console.error(error),
         });

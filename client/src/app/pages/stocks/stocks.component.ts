@@ -7,6 +7,7 @@ import { StocksService } from '../../_services/stocks.service';
 import { CommonModule } from '@angular/common';
 import { ModalService } from '../../_services/modal.service';
 import { CreateStockModalComponent } from '../../modals/create-stock-modal/create-stock-modal.component';
+import { LoaderComponent } from '../../loader/loader.component';
 
 @Component({
   selector: 'app-stocks',
@@ -17,6 +18,7 @@ import { CreateStockModalComponent } from '../../modals/create-stock-modal/creat
     StockCardComponent,
     CommonModule,
     CreateStockModalComponent,
+    LoaderComponent,
   ],
   templateUrl: './stocks.component.html',
   styleUrl: './stocks.component.scss',

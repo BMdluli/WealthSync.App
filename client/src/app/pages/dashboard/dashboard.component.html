@@ -1,10 +1,10 @@
 <app-header></app-header>
 
 @if (loading) {
-<p class="text-center text-gray-500 text-lg font-semibold mt-4">Loading...</p>
-} @if(savings.length < 1 && budgetItems.length < 1) {
+<app-loader></app-loader>
+} @else if(savings.length < 1 && budgetItems.length < 1) {
 <p>Nothing to show yet</p>
-} @if(savings.length > 0 || budgetItems.length > 0) {
+} @else if(savings.length > 0 || budgetItems.length > 0) {
 <div class="m-4">
   <!-- CARD ROW -->
   <div class="grid grid-cols-2 md:grid-cols-3 gap-2 md:gap-4 min-h-[160px]">

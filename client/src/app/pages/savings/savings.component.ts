@@ -6,6 +6,7 @@ import { CreateGoalModalComponent } from '../../modals/create-goal-modal/create-
 import { ModalService } from '../../_services/modal.service';
 import { SavingsService } from '../../_services/savings.service';
 import { Goal } from '../../_models/goal';
+import { LoaderComponent } from '../../loader/loader.component';
 
 @Component({
   selector: 'app-savings',
@@ -15,6 +16,7 @@ import { Goal } from '../../_models/goal';
     SidebarComponent,
     SavingsCardComponent,
     CreateGoalModalComponent,
+    LoaderComponent,
   ],
   templateUrl: './savings.component.html',
   styleUrl: './savings.component.scss',

@@ -8,6 +8,7 @@ import { CommonModule } from '@angular/common';
 import { ModalService } from '../../../_services/modal.service';
 import { CreateBudgetCategoryModalComponent } from '../../../modals/create-budget-category-modal/create-budget-category-modal.component';
 import { BudgetExpenseCardComponent } from '../budget-expense-card/budget-expense-card.component';
+import { LoaderComponent } from '../../../loader/loader.component';
 
 @Component({
   selector: 'app-budget-category',
@@ -17,6 +18,7 @@ import { BudgetExpenseCardComponent } from '../budget-expense-card/budget-expens
     CommonModule,
     CreateBudgetCategoryModalComponent,
     BudgetExpenseCardComponent,
+    LoaderComponent,
   ],
   templateUrl: './budget-category.component.html',
   styleUrl: './budget-category.component.scss',

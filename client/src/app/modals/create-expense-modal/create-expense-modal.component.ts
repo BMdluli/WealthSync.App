@@ -3,17 +3,21 @@ import { BudgetCategoryService } from '../../_services/budget-category.service';
 import { FormsModule } from '@angular/forms';
 import { ModalService } from '../../_services/modal.service';
 import { ExpenseService } from '../../_services/expense.service';
+import { SpinnerComponent } from '../../spinner/spinner.component';
+import { ToastrService } from 'ngx-toastr';
+import { RefreshService } from '../../_services/refresh.service';
 
 @Component({
   selector: 'app-create-expense-modal',
   standalone: true,
-  imports: [FormsModule],
+  imports: [FormsModule, SpinnerComponent],
   templateUrl: './create-expense-modal.component.html',
   styleUrl: './create-expense-modal.component.scss',
 })
 export class CreateExpenseModalComponent {
   @Input() id: string = '';
   isModalOpen = false;
+  loading = false;
 
   expenseModal = {
     budgetCategoryId: '',
@@ -23,9 +27,10 @@ export class CreateExpenseModalComponent {
   };
 
   constructor(
-    private budgetCategoryService: BudgetCategoryService,
     private modalService: ModalService,
-    private expenseService: ExpenseService
+    private expenseService: ExpenseService,
+    private toasr: ToastrService,
+    private refreshService: RefreshService
   ) {}
 
   ngOnInit() {
@@ -40,6 +45,7 @@ export class CreateExpenseModalComponent {
   }
 
   handleSubmit(form: any) {
+    this.loading = true;
     if (form.valid) {
       const expenseData = {
         ...this.expenseModal,
@@ -47,10 +53,12 @@ export class CreateExpenseModalComponent {
       };
       this.expenseService.createExpense(expenseData).subscribe({
         next: () => {
-          console.log('created created successfully');
+          this.toasr.success('created created successfully');
           this.closeModal();
+          this.refreshService.refreshPage();
         },
         error: (error) => console.error(error),
+        complete: () => (this.loading = false),
       });
       console.log(this.expenseModal);
     }

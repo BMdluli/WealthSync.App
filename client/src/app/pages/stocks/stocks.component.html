@@ -14,10 +14,10 @@
   </div>
 
   @if(isLoading) {
-  <p>Loading...</p>
-  } @if(stocks.length < 1) {
+  <app-loader></app-loader>
+  } @else if(stocks.length < 1) {
   <p>No stocks yet</p>
-  } @if(stocks.length > 0) {
+  } @else if(stocks.length > 0) {
 
   <!-- TOP SECTION -->
   <div class="flex flex-col md:flex-row md:justify-between gap-4">

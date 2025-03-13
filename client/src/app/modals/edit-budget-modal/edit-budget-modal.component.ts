@@ -2,16 +2,20 @@ import { Component } from '@angular/core';
 import { BudgetService } from '../../_services/budget.service';
 import { ModalService } from '../../_services/modal.service';
 import { FormsModule } from '@angular/forms';
+import { SpinnerComponent } from '../../spinner/spinner.component';
+import { ToastrService } from 'ngx-toastr';
+import { RefreshService } from '../../_services/refresh.service';
 
 @Component({
   selector: 'app-edit-budget-modal',
   standalone: true,
-  imports: [FormsModule],
+  imports: [FormsModule, SpinnerComponent],
   templateUrl: './edit-budget-modal.component.html',
   styleUrl: './edit-budget-modal.component.scss',
 })
 export class EditBudgetModalComponent {
   isModalOpen = false;
+  loading = false;
   id = 0;
 
   budgetModal = {
@@ -23,7 +27,9 @@ export class EditBudgetModalComponent {
 
   constructor(
     private budgetService: BudgetService,
-    private modalService: ModalService
+    private modalService: ModalService,
+    private toasr: ToastrService,
+    private refreshService: RefreshService
   ) {}
 
   ngOnInit() {
@@ -41,6 +47,7 @@ export class EditBudgetModalComponent {
   }
 
   handleSubmit(form: any) {
+    this.loading = true;
     if (form.valid) {
       const budgetData = {
         ...this.budgetModal,
@@ -49,10 +56,12 @@ export class EditBudgetModalComponent {
       };
       this.budgetService.updateBudget(this.id, budgetData).subscribe({
         next: () => {
-          console.log('Budget updated successfully');
+          this.toasr.success('Budget updated successfully');
           this.closeModal();
+          this.refreshService.refreshPage();
         },
         error: (err) => console.error(err),
+        complete: () => (this.loading = false),
       });
       console.log(this.budgetModal);
     }

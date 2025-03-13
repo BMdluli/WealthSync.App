@@ -3,16 +3,20 @@ import { StocksComponent } from '../../pages/stocks/stocks.component';
 import { ModalService } from '../../_services/modal.service';
 import { FormsModule } from '@angular/forms';
 import { StocksService } from '../../_services/stocks.service';
+import { ToastrService } from 'ngx-toastr';
+import { RefreshService } from '../../_services/refresh.service';
+import { SpinnerComponent } from '../../spinner/spinner.component';
 
 @Component({
   selector: 'app-create-stock-modal',
   standalone: true,
-  imports: [FormsModule],
+  imports: [FormsModule, SpinnerComponent],
   templateUrl: './create-stock-modal.component.html',
   styleUrl: './create-stock-modal.component.scss',
 })
 export class CreateStockModalComponent {
   isModalOpen = false;
+  loading = false;
 
   stockModel = {
     symbol: '',
@@ -22,7 +26,9 @@ export class CreateStockModalComponent {
 
   constructor(
     private stockService: StocksService,
-    private modalService: ModalService
+    private modalService: ModalService,
+    private toasr: ToastrService,
+    private refreshService: RefreshService
   ) {}
 
   ngOnInit() {
@@ -32,10 +38,16 @@ export class CreateStockModalComponent {
   }
 
   handleSubmit(form: any) {
+    this.loading = true;
     if (form.valid) {
       this.stockService.addStock(this.stockModel).subscribe({
-        next: () => console.log('Stock Added successfully'),
+        next: () => {
+          this.toasr.success('Stock Added successfully');
+          this.closeModal();
+          this.refreshService.refreshPage();
+        },
         error: (error) => console.error(error),
+        complete: () => (this.loading = false),
       });
     }
   }

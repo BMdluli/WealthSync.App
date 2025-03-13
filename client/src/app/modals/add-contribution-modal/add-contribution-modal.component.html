@@ -41,8 +41,11 @@
       <button
         type="submit"
         class="bg-black text-white w-full h-[40px] rounded-lg cursor-pointer"
+        [disabled]="loading"
       >
-        Add Contribution
+        @if(loading) {
+        <app-spinner></app-spinner>
+        } @else { Add Contribution }
       </button>
     </form>
   </div>

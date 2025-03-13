@@ -6,11 +6,12 @@ import { BudgetService } from '../../_services/budget.service';
 import { Budget } from '../../_models/budget';
 import { BudgetCardComponent } from '../budget/budget-card/budget-card.component';
 import { forkJoin } from 'rxjs';
+import { LoaderComponent } from '../../loader/loader.component';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [HeaderComponent, BudgetCardComponent],
+  imports: [HeaderComponent, BudgetCardComponent, LoaderComponent],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss',
 })
