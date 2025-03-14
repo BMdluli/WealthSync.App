@@ -7,11 +7,18 @@ import { Budget } from '../../_models/budget';
 import { BudgetCardComponent } from '../budget/budget-card/budget-card.component';
 import { forkJoin } from 'rxjs';
 import { LoaderComponent } from '../../loader/loader.component';
+import { StocksService } from '../../_services/stocks.service';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [HeaderComponent, BudgetCardComponent, LoaderComponent],
+  imports: [
+    HeaderComponent,
+    BudgetCardComponent,
+    LoaderComponent,
+    CommonModule,
+  ],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss',
 })
@@ -20,11 +27,13 @@ export class DashboardComponent implements OnInit {
   savings: Goal[] = [];
   budgetItemCount: number = 0;
   budgetItems: Budget[] = [];
+  stockTotal: number = 0;
   loading = true;
 
   constructor(
     private savingsService: SavingsService,
-    private budgetService: BudgetService
+    private budgetService: BudgetService,
+    private stockService: StocksService
   ) {}
 
   ngOnInit(): void {
@@ -35,8 +44,9 @@ export class DashboardComponent implements OnInit {
     forkJoin({
       savings: this.savingsService.getSavingsGoalLimit(),
       budgetItems: this.budgetService.getbudgetItemsLimit(),
+      stocks: this.stockService.getStockPrices(),
     }).subscribe({
-      next: ({ savings, budgetItems }) => {
+      next: ({ savings, budgetItems, stocks }) => {
         this.savings = savings;
         if (Array.isArray(savings)) {
           savings.forEach((item) => {
@@ -45,6 +55,10 @@ export class DashboardComponent implements OnInit {
             }
           });
         }
+
+        stocks.forEach((stock) => {
+          this.stockTotal += stock.currentPrice * stock.shares;
+        });
 
         this.budgetItemCount = budgetItems.length;
         this.budgetItems = budgetItems;

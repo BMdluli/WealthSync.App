@@ -61,6 +61,41 @@ public class StockController : ControllerBase
 
         return Ok(stockDtos);
     }
+    
+    
+    [HttpGet("/api/[controller]/prices")]
+    public async Task<ActionResult<IEnumerable<StockOnlyDto>>> GetStocksWithoutDividends()
+    {
+        var userId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+        if (userId == null) return Unauthorized();
+
+        var stocks = await _stockRepository.GetByUserIdAsync(userId);
+        var stockDtos = new List<StockOnlyDto>();
+
+        foreach (var stock in stocks)
+        {
+            var currentPrice = await _stockRepository.GetCurrentPriceAsync(stock.Symbol);
+            if (currentPrice > 0 && !stock.StockPrices.Any(sp => sp.Timestamp.Date == DateTime.UtcNow.Date))
+            {
+                await _stockRepository.UpdateStockDataAsync(stock.Id);
+            }
+            else
+            {
+                currentPrice = stock.StockPrices.OrderByDescending(sp => sp.Timestamp).FirstOrDefault()?.Price ?? 0;
+            }
+            
+            stockDtos.Add(new StockOnlyDto
+            {
+                Id = stock.Id,
+                Symbol = stock.Symbol,
+                Shares = stock.Shares,
+                PurchasePrice = stock.PurchasePrice,
+                CurrentPrice = currentPrice,
+            });
+        }
+
+        return Ok(stockDtos);
+    }
 
     // GET: api/Stock/5
     [HttpGet("{id}")]

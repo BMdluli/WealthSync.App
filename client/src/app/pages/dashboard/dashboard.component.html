@@ -11,7 +11,7 @@
     <div class="border-2 border-gray-400 rounded-lg p-2">
       <img src="/assets/icon-wallet.png" alt="savings" />
       <p class="font-semibold">Savings</p>
-      <p class="font-bold">R{{ totalSavings }}</p>
+      <p class="font-bold">{{ totalSavings | currency }}</p>
     </div>
 
     <div class="border-2 border-gray-400 rounded-lg p-2">
@@ -23,7 +23,7 @@
     <div class="border-2 border-gray-400 rounded-lg p-2">
       <img src="/assets/icon-bar-chart.png" alt="stocks" />
       <p class="font-semibold">Stocks</p>
-      <p class="font-bold">R123,456</p>
+      <p class="font-bold">{{ stockTotal | currency }}</p>
     </div>
   </div>
 
