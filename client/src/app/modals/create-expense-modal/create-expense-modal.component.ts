@@ -45,8 +45,8 @@ export class CreateExpenseModalComponent {
   }
 
   handleSubmit(form: any) {
-    this.loading = true;
     if (form.valid) {
+      this.loading = true;
       const expenseData = {
         ...this.expenseModal,
         startDate: new Date(this.expenseModal.date).toISOString(),
@@ -57,7 +57,10 @@ export class CreateExpenseModalComponent {
           this.closeModal();
           this.refreshService.refreshPage();
         },
-        error: (error) => console.error(error),
+        error: (error) => {
+          console.error(error);
+          this.loading = false;
+        },
         complete: () => (this.loading = false),
       });
       console.log(this.expenseModal);

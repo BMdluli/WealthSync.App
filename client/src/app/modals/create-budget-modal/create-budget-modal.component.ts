@@ -38,8 +38,8 @@ export class CreateBudgetModalComponent {
   }
 
   handleSubmit(form: any) {
-    this.loading = true;
     if (form.valid) {
+      this.loading = true;
       const budgetData = {
         ...this.budgetModal,
         startDate: new Date(this.budgetModal.startDate).toISOString(),
@@ -52,7 +52,10 @@ export class CreateBudgetModalComponent {
           this.closeModal();
           this.refreshService.refreshPage();
         },
-        error: (error) => console.error(error),
+        error: (error) => {
+          console.error(error);
+          this.loading = false;
+        },
         complete: () => (this.loading = false),
       });
       console.log(budgetData);

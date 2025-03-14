@@ -35,7 +35,10 @@ export class BudgetComponent implements OnInit {
     this.isLoading = true;
     this.budgetService.getbudgetItems().subscribe({
       next: (response) => (this.budgetItems = response),
-      error: (err) => console.error(err),
+      error: (err) => {
+        console.error(err);
+        this.isLoading = false;
+      },
       complete: () => (this.isLoading = false),
     });
   }

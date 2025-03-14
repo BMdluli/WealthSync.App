@@ -58,7 +58,10 @@ export class StocksComponent {
           this.annualIncome += stock.currentPrice * stock.dividendYield;
         });
       },
-      error: (err) => console.error(err),
+      error: (err) => {
+        this.isLoading = false;
+        console.error(err);
+      },
       complete: () => (this.isLoading = false),
     });
   }

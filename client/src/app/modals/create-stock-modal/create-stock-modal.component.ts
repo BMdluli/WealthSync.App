@@ -38,15 +38,18 @@ export class CreateStockModalComponent {
   }
 
   handleSubmit(form: any) {
-    this.loading = true;
     if (form.valid) {
+      this.loading = true;
       this.stockService.addStock(this.stockModel).subscribe({
         next: () => {
           this.toasr.success('Stock Added successfully');
           this.closeModal();
           this.refreshService.refreshPage();
         },
-        error: (error) => console.error(error),
+        error: (error) => {
+          console.error(error);
+          this.loading = false;
+        },
         complete: () => (this.loading = false),
       });
     }

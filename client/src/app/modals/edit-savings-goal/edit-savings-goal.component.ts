@@ -50,20 +50,23 @@ export class EditSavingsGoalComponent {
   }
 
   handleSubmit(form: any) {
-    this.loading = true;
     if (form.valid) {
+      this.loading = true;
       const savingsData = {
         ...this.goalModel,
         startDate: new Date(this.goalModel.startDate).toISOString(),
         endDate: new Date(this.goalModel.targetDate).toISOString(),
       };
       this.goalService.updateSavingsGoal(this.id, savingsData).subscribe({
-        next: (_) => {
+        next: () => {
           this.toasr.success('Goal updated successfully');
           this.closeModal();
           this.refreshService.refreshPage();
         },
-        error: (err) => console.error(err),
+        error: (error) => {
+          console.error(error);
+          this.loading = false;
+        },
         complete: () => (this.loading = false),
       });
       console.log(this.goalModel);

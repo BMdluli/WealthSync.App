@@ -46,7 +46,10 @@ export class SavingsComponent implements OnInit {
     this.isLoading = true;
     this.savingsService.getSavingsGoal().subscribe({
       next: (response) => (this.savings = response),
-      error: (err) => console.error(err),
+      error: (err) => {
+        console.error(err);
+        this.isLoading = false;
+      },
       complete: () => (this.isLoading = false),
     });
   }

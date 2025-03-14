@@ -49,7 +49,10 @@ export class DashboardComponent implements OnInit {
         this.budgetItemCount = budgetItems.length;
         this.budgetItems = budgetItems;
       },
-      error: (err) => console.error(err),
+      error: (err) => {
+        console.error(err);
+        this.loading = false;
+      },
       complete: () => (this.loading = false),
     });
   }

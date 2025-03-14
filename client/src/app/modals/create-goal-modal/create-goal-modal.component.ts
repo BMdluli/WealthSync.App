@@ -38,8 +38,8 @@ export class CreateGoalModalComponent implements OnInit {
   }
 
   handleSubmit(form: any) {
-    this.loading = true;
     if (form.valid) {
+      this.loading = true;
       const goalData = {
         ...this.goalModel,
         startDate: new Date(this.goalModel.startDate).toISOString(),
@@ -51,7 +51,10 @@ export class CreateGoalModalComponent implements OnInit {
           this.closeModal();
           this.refreshService.refreshPage();
         },
-        error: (error) => console.error(error),
+        error: (error) => {
+          console.error(error);
+          this.loading = false;
+        },
         complete: () => (this.loading = false),
       });
       console.log(this.goalModel);

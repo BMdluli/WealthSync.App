@@ -53,8 +53,8 @@ export class EditBudgetCategoryModalComponent {
   }
 
   handleSubmit(form: any) {
-    this.loading = true;
     if (form.valid) {
+      this.loading = true;
       this.budgetCategoryService
         .editBudgetCategory(this.budgetCategoryId, this.budgetCategoryModel)
         .subscribe({
@@ -63,7 +63,11 @@ export class EditBudgetCategoryModalComponent {
             this.closeModal();
             this.refreshService.refreshPage();
           },
-          error: (error) => console.error(error),
+          error: (error) => {
+            console.error(error);
+            this.loading = false;
+          },
+          complete: () => (this.loading = false),
         });
 
       console.log(this.budgetCategoryId, this.budgetCategoryModel.budgetId);

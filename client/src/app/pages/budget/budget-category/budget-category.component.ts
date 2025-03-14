@@ -53,7 +53,10 @@ export class BudgetCategoryComponent implements OnInit {
     this.isLoading = true;
     this.budgetCategoryService.getBudgetCategories(this.id!).subscribe({
       next: (response) => (this.budgetCategories = response),
-      error: (err) => console.error(err),
+      error: (err) => {
+        console.error(err);
+        this.isLoading = false;
+      },
       complete: () => (this.isLoading = false),
     });
   }

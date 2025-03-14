@@ -4,6 +4,10 @@ import { ModalService } from '../../../_services/modal.service';
 import { CreateExpenseModalComponent } from '../../../modals/create-expense-modal/create-expense-modal.component';
 import { BudgetCategoryService } from '../../../_services/budget-category.service';
 import { EditBudgetCategoryModalComponent } from '../../../modals/edit-budget-category-modal/edit-budget-category-modal.component';
+import { LoaderComponent } from '../../../loader/loader.component';
+import { RefreshService } from '../../../_services/refresh.service';
+import { SpinnerComponent } from '../../../spinner/spinner.component';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-budget-expense-card',
@@ -12,6 +16,8 @@ import { EditBudgetCategoryModalComponent } from '../../../modals/edit-budget-ca
     CommonModule,
     CreateExpenseModalComponent,
     EditBudgetCategoryModalComponent,
+    LoaderComponent,
+    SpinnerComponent,
   ],
   templateUrl: './budget-expense-card.component.html',
   styleUrl: './budget-expense-card.component.scss',
@@ -23,10 +29,13 @@ export class BudgetExpenseCardComponent {
   @Input() id: number = 0;
 
   isExpenseModalOpen = false;
+  loading = false;
 
   constructor(
     private modalService: ModalService,
-    private budgetCategoryService: BudgetCategoryService
+    private budgetCategoryService: BudgetCategoryService,
+    private refreshService: RefreshService,
+    private toastr: ToastrService
   ) {}
 
   ngOnInit(): void {
@@ -56,9 +65,18 @@ export class BudgetExpenseCardComponent {
   }
 
   deleteBudgetCategory() {
+    this.loading = true;
     this.budgetCategoryService.deleteBudgetCategory(this.id).subscribe({
-      next: (_) => console.log('Budget Category deleted successfully'),
-      error: (err) => console.error(err),
+      next: () => {
+        this.toastr.success('Budget Category deleted successfully');
+        this.refreshService.refreshPage();
+      },
+
+      error: (err) => {
+        console.error(err);
+        this.loading = false;
+      },
+      complete: () => (this.loading = false),
     });
     console.log(this.id);
   }

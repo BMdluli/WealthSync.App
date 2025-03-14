@@ -47,8 +47,8 @@ export class EditBudgetModalComponent {
   }
 
   handleSubmit(form: any) {
-    this.loading = true;
     if (form.valid) {
+      this.loading = true;
       const budgetData = {
         ...this.budgetModal,
         startDate: new Date(this.budgetModal.startDate).toISOString(),
@@ -60,7 +60,10 @@ export class EditBudgetModalComponent {
           this.closeModal();
           this.refreshService.refreshPage();
         },
-        error: (err) => console.error(err),
+        error: (error) => {
+          console.error(error);
+          this.loading = false;
+        },
         complete: () => (this.loading = false),
       });
       console.log(this.budgetModal);

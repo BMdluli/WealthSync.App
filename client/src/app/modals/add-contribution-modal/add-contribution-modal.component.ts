@@ -44,15 +44,18 @@ export class AddContributionModalComponent {
   }
 
   handleSubmit(form: any) {
-    this.loading = true;
     if (form.valid) {
+      this.loading = true;
       this.contributionService.addSavings(this.contributionModel).subscribe({
         next: () => {
           this.toastr.success('Contribution Added successfully');
           this.closeModal();
           this.refeshService.refreshPage();
         },
-        error: (error) => console.error(error),
+        error: (error) => {
+          console.error(error);
+          this.loading = false;
+        },
         complete: () => (this.loading = false),
       });
     }
