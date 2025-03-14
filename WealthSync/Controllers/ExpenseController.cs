@@ -10,17 +10,18 @@ using WealthSync.Dtos;
 using WealthSync.Models;
 using WealthSync.repository.interfaces;
 
+
 [Route("api/[controller]")]
 [ApiController]
 [Authorize]
 public class ExpenseController : ControllerBase
 {
-    private readonly IExpenseRepository _expenseRepository;
+    private readonly IUnitOfWork _unitOfWork;
     private readonly AppDbContext _context; // Still needed for category validation
 
-    public ExpenseController(IExpenseRepository expenseRepository, AppDbContext context)
+    public ExpenseController(IUnitOfWork unitOfWork, AppDbContext context)
     {
-        _expenseRepository = expenseRepository;
+        _unitOfWork = unitOfWork;
         _context = context;
     }
 
@@ -31,7 +32,7 @@ public class ExpenseController : ControllerBase
         var userId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
         if (userId == null) return Unauthorized();
 
-        var expenses = await _expenseRepository.GetByUserIdAsync(userId);
+        var expenses = await _unitOfWork.Expense.GetByUserIdAsync(userId);
         var expenseDtos = expenses.Select(e => new ExpenseDto
         {
             Id = e.Id,
@@ -51,7 +52,7 @@ public class ExpenseController : ControllerBase
         var userId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
         if (userId == null) return Unauthorized();
 
-        var expense = await _expenseRepository.GetByIdForUserAsync(id, userId);
+        var expense = await _unitOfWork.Expense.GetByIdForUserAsync(id, userId);
         if (expense == null) return NotFound();
 
         var expenseDto = new ExpenseDto
@@ -73,7 +74,7 @@ public class ExpenseController : ControllerBase
         var userId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
         if (userId == null) return Unauthorized();
 
-        var expenses = await _expenseRepository.GetByCategoryIdAsync(budgetCategoryId);
+        var expenses = await _unitOfWork.Expense.GetByCategoryIdAsync(budgetCategoryId);
         var filteredExpenses = expenses.Where(e => e.BudgetCategory.Budget.AppUserId == userId);
         var expenseDtos = filteredExpenses.Select(e => new ExpenseDto
         {
@@ -107,7 +108,7 @@ public class ExpenseController : ControllerBase
             Date = createExpenseDto.Date
         };
 
-        await _expenseRepository.AddAsync(expense);
+        await _unitOfWork.Expense.AddAsync(expense);
 
         var expenseDto = new ExpenseDto
         {
@@ -128,7 +129,7 @@ public class ExpenseController : ControllerBase
         var userId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
         if (userId == null) return Unauthorized();
 
-        var expense = await _expenseRepository.GetByIdForUserAsync(id, userId);
+        var expense = await _unitOfWork.Expense.GetByIdForUserAsync(id, userId);
         if (expense == null) return NotFound();
 
         // Validate new BudgetCategoryId if changed
@@ -146,11 +147,11 @@ public class ExpenseController : ControllerBase
 
         try
         {
-            await _expenseRepository.UpdateAsync(expense);
+            await _unitOfWork.Expense.UpdateAsync(expense);
         }
         catch (DbUpdateConcurrencyException)
         {
-            if (!await _expenseRepository.ExistsAsync(id)) return NotFound();
+            if (!await _unitOfWork.Expense.ExistsAsync(id)) return NotFound();
             throw;
         }
 
@@ -164,10 +165,10 @@ public class ExpenseController : ControllerBase
         var userId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
         if (userId == null) return Unauthorized();
 
-        var expense = await _expenseRepository.GetByIdForUserAsync(id, userId);
+        var expense = await _unitOfWork.Expense.GetByIdForUserAsync(id, userId);
         if (expense == null) return NotFound();
 
-        await _expenseRepository.DeleteAsync(expense);
+        await _unitOfWork.Expense.DeleteAsync(expense);
 
         return NoContent();
     }

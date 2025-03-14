@@ -1,25 +1,23 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Linq;
-using System.Threading.Tasks;
 using WealthSync.Dtos;
 using WealthSync.Models;
 using WealthSync.repository.interfaces;
+
+
+namespace WealthSync.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
 [Authorize]
 public class BudgetCategoryController : ControllerBase
 {
-    private readonly IBudgetCategoryRepository _categoryRepository;
-    private readonly IBudgetRepository _budgetRepository;
+    private readonly IUnitOfWork _unitOfWork;
 
-    public BudgetCategoryController(IBudgetCategoryRepository categoryRepository, IBudgetRepository budgetRepository)
+    public BudgetCategoryController(IUnitOfWork unitOfWork)
     {
-        _categoryRepository = categoryRepository;
-        _budgetRepository = budgetRepository;
+        _unitOfWork = unitOfWork;
     }
 
     // GET: api/BudgetCategory
@@ -29,7 +27,7 @@ public class BudgetCategoryController : ControllerBase
         var userId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
         if (userId == null) return Unauthorized();
 
-        var categories = await _categoryRepository.GetByUserIdAsync(userId);
+        var categories = await _unitOfWork.BudgetCategory.GetByUserIdAsync(userId);
         var categoryDtos = categories.Select(c => new BudgetCategoryDto
         {
             Id = c.Id,
@@ -49,7 +47,7 @@ public class BudgetCategoryController : ControllerBase
         var userId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
         if (userId == null) return Unauthorized();
 
-        var category = await _categoryRepository.GetByIdForUserAsync(id, userId);
+        var category = await _unitOfWork.BudgetCategory.GetByIdForUserAsync(id, userId);
         if (category == null) return NotFound();
 
         var categoryDto = new BudgetCategoryDto
@@ -71,7 +69,7 @@ public class BudgetCategoryController : ControllerBase
         var userId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
         if (userId == null) return Unauthorized();
 
-        var categories = await _categoryRepository.GetByBudgetIdAsync(budgetId, userId);
+        var categories = await _unitOfWork.BudgetCategory.GetByBudgetIdAsync(budgetId, userId);
         var categoryDtos = categories.Select(c => new BudgetCategoryDto
         {
             Id = c.Id,
@@ -92,7 +90,7 @@ public class BudgetCategoryController : ControllerBase
         if (userId == null) return Unauthorized();
 
         // Validate Budget exists and belongs to the user
-        var budget = await _budgetRepository.GetByIdForUserAsync(createDto.BudgetId, userId);
+        var budget = await _unitOfWork.Budget.GetByIdForUserAsync(createDto.BudgetId, userId);
         if (budget == null) return BadRequest("Invalid BudgetId");
 
         var category = new BudgetCategory
@@ -102,7 +100,7 @@ public class BudgetCategoryController : ControllerBase
             AllocatedAmount = createDto.AllocatedAmount
         };
 
-        await _categoryRepository.AddAsync(category);
+        await _unitOfWork.BudgetCategory.AddAsync(category);
 
         var categoryDto = new BudgetCategoryDto
         {
@@ -123,13 +121,13 @@ public class BudgetCategoryController : ControllerBase
         var userId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
         if (userId == null) return Unauthorized();
 
-        var category = await _categoryRepository.GetByIdForUserAsync(id, userId);
+        var category = await _unitOfWork.BudgetCategory.GetByIdForUserAsync(id, userId);
         if (category == null) return NotFound();
 
         // Validate new BudgetId if changed
         if (updateDto.BudgetId != category.BudgetId)
         {
-            var budget = await _budgetRepository.GetByIdForUserAsync(updateDto.BudgetId, userId);
+            var budget = await _unitOfWork.Budget.GetByIdForUserAsync(updateDto.BudgetId, userId);
             if (budget == null) return BadRequest("Invalid BudgetId");
             category.BudgetId = updateDto.BudgetId;
         }
@@ -139,11 +137,11 @@ public class BudgetCategoryController : ControllerBase
 
         try
         {
-            await _categoryRepository.UpdateAsync(category);
+            await _unitOfWork.BudgetCategory.UpdateAsync(category);
         }
         catch (DbUpdateConcurrencyException)
         {
-            if (!await _categoryRepository.ExistsAsync(id)) return NotFound();
+            if (!await _unitOfWork.BudgetCategory.ExistsAsync(id)) return NotFound();
             throw;
         }
 
@@ -157,12 +155,12 @@ public class BudgetCategoryController : ControllerBase
         var userId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
         if (userId == null) return Unauthorized();
 
-        var category = await _categoryRepository.GetByIdForUserAsync(id, userId);
+        var category = await _unitOfWork.BudgetCategory.GetByIdForUserAsync(id, userId);
         if (category == null) return NotFound();
 
         if (category.Expenses.Any()) return BadRequest("Cannot delete category with existing expenses.");
 
-        await _categoryRepository.DeleteAsync(category);
+        await _unitOfWork.BudgetCategory.DeleteAsync(category);
 
         return NoContent();
     }

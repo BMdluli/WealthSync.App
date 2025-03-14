@@ -6,17 +6,18 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using WealthSync.Dtos;
+using WealthSync.repository.interfaces;
 
 [Route("api/[controller]")]
 [ApiController]
 [Authorize]
 public class StockController : ControllerBase
 {
-    private readonly IStockRepository _stockRepository;
+    private readonly IUnitOfWork _unitOfWork;
 
-    public StockController(IStockRepository stockRepository)
+    public StockController(IUnitOfWork unitOfWork)
     {
-        _stockRepository = stockRepository;
+        _unitOfWork = unitOfWork;
     }
 
     // GET: api/Stock
@@ -26,23 +27,23 @@ public class StockController : ControllerBase
         var userId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
         if (userId == null) return Unauthorized();
 
-        var stocks = await _stockRepository.GetByUserIdAsync(userId);
+        var stocks = await _unitOfWork.Stock.GetByUserIdAsync(userId);
         var stockDtos = new List<StockDto>();
 
         foreach (var stock in stocks)
         {
-            var currentPrice = await _stockRepository.GetCurrentPriceAsync(stock.Symbol);
+            var currentPrice = await _unitOfWork.Stock.GetCurrentPriceAsync(stock.Symbol);
             if (currentPrice > 0 && !stock.StockPrices.Any(sp => sp.Timestamp.Date == DateTime.UtcNow.Date))
             {
-                await _stockRepository.UpdateStockDataAsync(stock.Id);
+                await _unitOfWork.Stock.UpdateStockDataAsync(stock.Id);
             }
             else
             {
                 currentPrice = stock.StockPrices.OrderByDescending(sp => sp.Timestamp).FirstOrDefault()?.Price ?? 0;
             }
 
-            var dividendYield = await _stockRepository.GetDividendYieldAsync(stock.Symbol);
-            var dividendFrequency = await _stockRepository.GetDividendFrequencyAsync(stock.Symbol);
+            var dividendYield = await _unitOfWork.Stock.GetDividendYieldAsync(stock.Symbol);
+            var dividendFrequency = await _unitOfWork.Stock.GetDividendFrequencyAsync(stock.Symbol);
 
             stockDtos.Add(new StockDto
             {
@@ -69,15 +70,15 @@ public class StockController : ControllerBase
         var userId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
         if (userId == null) return Unauthorized();
 
-        var stocks = await _stockRepository.GetByUserIdAsync(userId);
+        var stocks = await _unitOfWork.Stock.GetByUserIdAsync(userId);
         var stockDtos = new List<StockOnlyDto>();
 
         foreach (var stock in stocks)
         {
-            var currentPrice = await _stockRepository.GetCurrentPriceAsync(stock.Symbol);
+            var currentPrice = await _unitOfWork.Stock.GetCurrentPriceAsync(stock.Symbol);
             if (currentPrice > 0 && !stock.StockPrices.Any(sp => sp.Timestamp.Date == DateTime.UtcNow.Date))
             {
-                await _stockRepository.UpdateStockDataAsync(stock.Id);
+                await _unitOfWork.Stock.UpdateStockDataAsync(stock.Id);
             }
             else
             {
@@ -104,21 +105,21 @@ public class StockController : ControllerBase
         var userId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
         if (userId == null) return Unauthorized();
 
-        var stock = await _stockRepository.GetByIdForUserAsync(id, userId);
+        var stock = await _unitOfWork.Stock.GetByIdForUserAsync(id, userId);
         if (stock == null) return NotFound();
 
-        var currentPrice = await _stockRepository.GetCurrentPriceAsync(stock.Symbol);
+        var currentPrice = await _unitOfWork.Stock.GetCurrentPriceAsync(stock.Symbol);
         if (currentPrice > 0 && !stock.StockPrices.Any(sp => sp.Timestamp.Date == DateTime.UtcNow.Date))
         {
-            await _stockRepository.UpdateStockDataAsync(stock.Id);
+            await _unitOfWork.Stock.UpdateStockDataAsync(stock.Id);
         }
         else
         {
             currentPrice = stock.StockPrices.OrderByDescending(sp => sp.Timestamp).FirstOrDefault()?.Price ?? 0;
         }
 
-        var dividendYield = await _stockRepository.GetDividendYieldAsync(stock.Symbol);
-        var dividendFrequency = await _stockRepository.GetDividendFrequencyAsync(stock.Symbol);
+        var dividendYield = await _unitOfWork.Stock.GetDividendYieldAsync(stock.Symbol);
+        var dividendFrequency = await _unitOfWork.Stock.GetDividendFrequencyAsync(stock.Symbol);
 
         var stockDto = new StockDetailDto
         {
@@ -154,7 +155,7 @@ public class StockController : ControllerBase
         var userId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
         if (userId == null) return Unauthorized();
 
-        var userStocks = await _stockRepository.GetByUserIdAsync(userId);
+        var userStocks = await _unitOfWork.Stock.GetByUserIdAsync(userId);
         if (userStocks.Count() >= 3)
         {
             return BadRequest("You have reached the maximum limit of 3 stocks. Delete an existing stock to add a new one.");
@@ -169,10 +170,10 @@ public class StockController : ControllerBase
             PurchaseDate = DateTime.UtcNow
         };
 
-        await _stockRepository.AddAsync(stock);
+        await _unitOfWork.Stock.AddAsync(stock);
 
-        var currentPrice = await _stockRepository.GetCurrentPriceAsync(stock.Symbol);
-        var dividendYield = await _stockRepository.GetDividendYieldAsync(stock.Symbol);
+        var currentPrice = await _unitOfWork.Stock.GetCurrentPriceAsync(stock.Symbol);
+        var dividendYield = await _unitOfWork.Stock.GetDividendYieldAsync(stock.Symbol);
 
         var stockDto = new StockDto
         {
@@ -197,10 +198,10 @@ public class StockController : ControllerBase
         var userId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
         if (userId == null) return Unauthorized();
 
-        var stock = await _stockRepository.GetByIdForUserAsync(id, userId);
+        var stock = await _unitOfWork.Stock.GetByIdForUserAsync(id, userId);
         if (stock == null) return NotFound("Stock not found or does not belong to you.");
 
-        await _stockRepository.DeleteAsync(stock);
+        await _unitOfWork.Stock.DeleteAsync(stock);
 
         return NoContent();
     }

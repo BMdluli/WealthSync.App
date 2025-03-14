@@ -11,11 +11,11 @@ using WealthSync.repository.interfaces;
 [Authorize]
 public class BudgetController : ControllerBase
 {
-    private readonly IBudgetRepository _budgetRepository;
+    private readonly IUnitOfWork _unitOfWork;
 
-    public BudgetController(IBudgetRepository budgetRepository)
+    public BudgetController(IUnitOfWork unitOfWork)
     {
-        _budgetRepository = budgetRepository;
+        _unitOfWork = unitOfWork;
     }
 
     // GET: api/Budget
@@ -25,7 +25,7 @@ public class BudgetController : ControllerBase
         var userId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
         if (userId == null) return Unauthorized();
 
-        var budgets = await _budgetRepository.GetByUserIdAsync(userId, limit);
+        var budgets = await _unitOfWork.Budget.GetByUserIdAsync(userId, limit);
         var budgetDtos = budgets.Select(b => new BudgetDto
         {
             Id = b.Id,
@@ -44,7 +44,7 @@ public class BudgetController : ControllerBase
         var userId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
         if (userId == null) return Unauthorized();
         
-        var count = await _budgetRepository.GetCountAsync(userId);
+        var count = await _unitOfWork.Budget.GetCountAsync(userId);
 
         var result = new
         {
@@ -61,7 +61,7 @@ public class BudgetController : ControllerBase
         var userId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
         if (userId == null) return Unauthorized();
 
-        var budget = await _budgetRepository.GetDetailedByIdForUserAsync(id, userId);
+        var budget = await _unitOfWork.Budget.GetDetailedByIdForUserAsync(id, userId);
         if (budget == null) return NotFound();
 
         var budgetDto = new BudgetDetailDto
@@ -99,7 +99,7 @@ public class BudgetController : ControllerBase
             TotalIncome = createBudgetDto.TotalIncome
         };
 
-        await _budgetRepository.AddAsync(budget);
+        await _unitOfWork.Budget.AddAsync(budget);
 
         var budgetDto = new BudgetDto
         {
@@ -120,7 +120,7 @@ public class BudgetController : ControllerBase
         var userId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
         if (userId == null) return Unauthorized();
 
-        var budget = await _budgetRepository.GetByIdForUserAsync(id, userId);
+        var budget = await _unitOfWork.Budget.GetByIdForUserAsync(id, userId);
         if (budget == null) return NotFound();
 
         budget.Name = updateBudgetDto.Name;
@@ -130,11 +130,11 @@ public class BudgetController : ControllerBase
 
         try
         {
-            await _budgetRepository.UpdateAsync(budget);
+            await _unitOfWork.Budget.UpdateAsync(budget);
         }
         catch (DbUpdateConcurrencyException)
         {
-            if (!await _budgetRepository.ExistsAsync(id)) return NotFound();
+            if (!await _unitOfWork.Budget.ExistsAsync(id)) return NotFound();
             throw;
         }
 
@@ -148,10 +148,10 @@ public class BudgetController : ControllerBase
         var userId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
         if (userId == null) return Unauthorized();
 
-        var budget = await _budgetRepository.GetByIdForUserAsync(id, userId);
+        var budget = await _unitOfWork.Budget.GetByIdForUserAsync(id, userId);
         if (budget == null) return NotFound();
 
-        await _budgetRepository.DeleteAsync(budget);
+        await _unitOfWork.Budget.DeleteAsync(budget);
 
         return NoContent();
     }

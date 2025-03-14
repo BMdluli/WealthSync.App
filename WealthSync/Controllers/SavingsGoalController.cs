@@ -7,16 +7,17 @@ using System.Threading.Tasks;
 using WealthSync.Data;
 using WealthSync.repository.interfaces;
 
+
 [Route("api/[controller]")]
 [ApiController]
 [Authorize]
 public class SavingsGoalController : ControllerBase
 {
-    private readonly ISavingsRepository _savingsGoalRepository;
+    private readonly IUnitOfWork _unitOfWork;
 
-    public SavingsGoalController(ISavingsRepository savingsGoalRepository)
+    public SavingsGoalController(IUnitOfWork unitOfWork)
     {
-        _savingsGoalRepository = savingsGoalRepository;
+        _unitOfWork = unitOfWork;
     }
 
     // GET: api/SavingsGoal
@@ -26,7 +27,7 @@ public class SavingsGoalController : ControllerBase
         var userId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
         if (userId == null) return Unauthorized();
 
-        var goals = await _savingsGoalRepository.GetByUserIdAsync(userId, limit);
+        var goals = await _unitOfWork.Saving.GetByUserIdAsync(userId, limit);
         var goalDtos = goals.Select(g => new SavingsGoalDto
         {
             Id = g.Id,
@@ -47,7 +48,7 @@ public class SavingsGoalController : ControllerBase
         var userId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
         if (userId == null) return Unauthorized();
 
-        var goal = await _savingsGoalRepository.GetByIdForUserAsync(id, userId);
+        var goal = await _unitOfWork.Saving.GetByIdForUserAsync(id, userId);
         if (goal == null) return NotFound();
 
         var goalDto = new SavingsGoalDetailDto
@@ -87,7 +88,7 @@ public class SavingsGoalController : ControllerBase
             TargetDate = createDto.TargetDate
         };
 
-        await _savingsGoalRepository.AddAsync(goal);
+        await _unitOfWork.Saving.AddAsync(goal);
 
         var goalDto = new SavingsGoalDto
         {
@@ -109,7 +110,7 @@ public class SavingsGoalController : ControllerBase
         var userId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
         if (userId == null) return Unauthorized();
 
-        var goal = await _savingsGoalRepository.GetByIdForUserAsync(id, userId);
+        var goal = await _unitOfWork.Saving.GetByIdForUserAsync(id, userId);
         if (goal == null) return NotFound();
 
         goal.Name = updateDto.Name;
@@ -119,11 +120,11 @@ public class SavingsGoalController : ControllerBase
 
         try
         {
-            await _savingsGoalRepository.UpdateAsync(goal);
+            await _unitOfWork.Saving.UpdateAsync(goal);
         }
         catch (DbUpdateConcurrencyException)
         {
-            if (!await _savingsGoalRepository.ExistsAsync(id)) return NotFound();
+            if (!await _unitOfWork.Saving.ExistsAsync(id)) return NotFound();
             throw;
         }
 
@@ -137,10 +138,10 @@ public class SavingsGoalController : ControllerBase
         var userId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
         if (userId == null) return Unauthorized();
 
-        var goal = await _savingsGoalRepository.GetByIdForUserAsync(id, userId);
+        var goal = await _unitOfWork.Saving.GetByIdForUserAsync(id, userId);
         if (goal == null) return NotFound();
 
-        await _savingsGoalRepository.DeleteAsync(goal);
+        await _unitOfWork.Saving.DeleteAsync(goal);
 
         return NoContent();
     }

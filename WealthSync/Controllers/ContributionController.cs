@@ -13,27 +13,24 @@ using WealthSync.repository.interfaces;
 [Authorize]
 public class ContributionController : ControllerBase
 {
-    private readonly IContributionsRepository _contributionRepository;
-    private readonly ISavingsRepository _savingsGoalRepository;
+    private readonly IUnitOfWork _unitOfWork;
 
     public ContributionController(
-        IContributionsRepository contributionRepository,
-        ISavingsRepository savingsGoalRepository)
+        IUnitOfWork unitOfWork)
     {
-        _contributionRepository = contributionRepository;
-        _savingsGoalRepository = savingsGoalRepository;
+        _unitOfWork = unitOfWork;
     }
 
     // GET: api/SavingsContribution
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<ContributionDto>>> GetContributions()
+    public async Task<ActionResult<IEnumerable<ContributionDto>>> GetContribution()
     {
         var userId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
         if (userId == null) return Unauthorized();
 
-        var contributions = await _contributionRepository.GetAllAsync();
-        var userContributions = contributions.Where(c => c.Saving.AppUserId == userId);
-        var contributionDtos = userContributions.Select(c => new ContributionDto
+        var Contribution = await _unitOfWork.Contribution.GetAllAsync();
+        var userContribution = Contribution.Where(c => c.Saving.AppUserId == userId);
+        var contributionDtos = userContribution.Select(c => new ContributionDto
         {
             Id = c.Id,
             SavingId = c.SavingId,
@@ -52,7 +49,7 @@ public class ContributionController : ControllerBase
         var userId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
         if (userId == null) return Unauthorized();
 
-        var contribution = await _contributionRepository.GetByIdForUserAsync(id, userId);
+        var contribution = await _unitOfWork.Contribution.GetByIdForUserAsync(id, userId);
         if (contribution == null) return NotFound();
 
         var contributionDto = new ContributionDto
@@ -69,13 +66,13 @@ public class ContributionController : ControllerBase
 
     // GET: api/SavingsContribution/SavingsGoal/5
     [HttpGet("SavingsGoal/{savingsGoalId}")]
-    public async Task<ActionResult<IEnumerable<ContributionDto>>> GetContributionsBySavingsGoal(int savingsGoalId)
+    public async Task<ActionResult<IEnumerable<ContributionDto>>> GetContributionBySavingsGoal(int savingsGoalId)
     {
         var userId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
         if (userId == null) return Unauthorized();
 
-        var contributions = await _contributionRepository.GetBySavingsGoalIdAsync(savingsGoalId, userId);
-        var contributionDtos = contributions.Select(c => new ContributionDto
+        var Contribution = await _unitOfWork.Contribution.GetBySavingsGoalIdAsync(savingsGoalId, userId);
+        var contributionDtos = Contribution.Select(c => new ContributionDto
         {
             Id = c.Id,
             SavingId = c.SavingId,
@@ -95,7 +92,7 @@ public class ContributionController : ControllerBase
         if (userId == null) return Unauthorized();
 
         // Validate SavingsGoal exists and belongs to the user
-        var goal = await _savingsGoalRepository.GetByIdForUserAsync(createDto.SavingId, userId);
+        var goal = await _unitOfWork.Saving.GetByIdForUserAsync(createDto.SavingId, userId);
         if (goal == null) return BadRequest("Invalid SavingId");
 
         var contribution = new Contribution
@@ -106,7 +103,7 @@ public class ContributionController : ControllerBase
             Description = createDto.Description
         };
 
-        await _contributionRepository.AddAsync(contribution);
+        await _unitOfWork.Contribution.AddAsync(contribution);
 
         var contributionDto = new ContributionDto
         {
@@ -127,13 +124,13 @@ public class ContributionController : ControllerBase
         var userId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
         if (userId == null) return Unauthorized();
 
-        var contribution = await _contributionRepository.GetByIdForUserAsync(id, userId);
+        var contribution = await _unitOfWork.Contribution.GetByIdForUserAsync(id, userId);
         if (contribution == null) return NotFound();
 
         // Validate new SavingId if changed
         if (updateDto.SavingId != contribution.SavingId)
         {
-            var goal = await _savingsGoalRepository.GetByIdForUserAsync(updateDto.SavingId, userId);
+            var goal = await _unitOfWork.Saving.GetByIdForUserAsync(updateDto.SavingId, userId);
             if (goal == null) return BadRequest("Invalid SavingId");
             contribution.SavingId = updateDto.SavingId;
         }
@@ -144,11 +141,11 @@ public class ContributionController : ControllerBase
 
         try
         {
-            await _contributionRepository.UpdateAsync(contribution);
+            await _unitOfWork.Contribution.UpdateAsync(contribution);
         }
         catch (DbUpdateConcurrencyException)
         {
-            if (!await _contributionRepository.ExistsAsync(id)) return NotFound();
+            if (!await _unitOfWork.Contribution.ExistsAsync(id)) return NotFound();
             throw;
         }
 
@@ -162,10 +159,10 @@ public class ContributionController : ControllerBase
         var userId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
         if (userId == null) return Unauthorized();
 
-        var contribution = await _contributionRepository.GetByIdForUserAsync(id, userId);
+        var contribution = await _unitOfWork.Contribution.GetByIdForUserAsync(id, userId);
         if (contribution == null) return NotFound();
 
-        await _contributionRepository.DeleteAsync(contribution);
+        await _unitOfWork.Contribution.DeleteAsync(contribution);
 
         return NoContent();
     }
