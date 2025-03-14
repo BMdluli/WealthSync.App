@@ -45,8 +45,9 @@ export class DashboardComponent implements OnInit {
       savings: this.savingsService.getSavingsGoalLimit(),
       budgetItems: this.budgetService.getbudgetItemsLimit(),
       stocks: this.stockService.getStockPrices(),
+      count: this.budgetService.getbudgetCount(),
     }).subscribe({
-      next: ({ savings, budgetItems, stocks }) => {
+      next: ({ savings, budgetItems, stocks, count }) => {
         this.savings = savings;
         if (Array.isArray(savings)) {
           savings.forEach((item) => {
@@ -60,7 +61,7 @@ export class DashboardComponent implements OnInit {
           this.stockTotal += stock.currentPrice * stock.shares;
         });
 
-        this.budgetItemCount = budgetItems.length;
+        this.budgetItemCount = count.count;
         this.budgetItems = budgetItems;
       },
       error: (err) => {

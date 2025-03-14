@@ -41,6 +41,11 @@ public class BudgetRepository : IBudgetRepository
             .FirstOrDefaultAsync();
     }
 
+    public async Task<int> GetCountAsync(string userId)
+    {
+        return await _context.Budgets.Where(x => x.AppUserId == userId).CountAsync();
+    }
+    
     public async Task<IEnumerable<Budget>> GetByUserIdAsync(string userId, int? limit)
     {
         var budgets =  _context.Budgets

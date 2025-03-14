@@ -1,12 +1,13 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Budget } from '../_models/budget';
+import { Budget, Count } from '../_models/budget';
 
 @Injectable({
   providedIn: 'root',
 })
 export class BudgetService {
   private apiUrl = 'https://localhost:7001/api/Budget';
+  // https://localhost:7001/api/Budget/GetBudgetCount
 
   constructor(private http: HttpClient) {}
 
@@ -16,6 +17,10 @@ export class BudgetService {
 
   getbudgetItemsLimit() {
     return this.http.get<Budget[]>(`${this.apiUrl}?limit=6`);
+  }
+
+  getbudgetCount() {
+    return this.http.get<Count>(`${this.apiUrl}/GetBudgetCount`);
   }
 
   createBudget(formData: any) {

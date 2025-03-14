@@ -38,6 +38,22 @@ public class BudgetController : ControllerBase
         return Ok(budgetDtos);
     }
 
+    [HttpGet("[action]")]
+    public async Task<ActionResult<int>> GetBudgetCount()
+    {
+        var userId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+        if (userId == null) return Unauthorized();
+        
+        var count = await _budgetRepository.GetCountAsync(userId);
+
+        var result = new
+        {
+            Count = count
+        };
+        
+        return Ok(result);
+    }
+
     // GET: api/Budget/5
     [HttpGet("{id}")]
     public async Task<ActionResult<BudgetDetailDto>> GetBudget(int id)

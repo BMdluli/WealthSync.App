@@ -7,6 +7,6 @@ export class RefreshService {
   refreshPage() {
     setTimeout(() => {
       location.reload();
-    }, 1000);
+    }, 500);
   }
 }

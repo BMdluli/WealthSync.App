@@ -5,3 +5,7 @@ export interface Budget {
   startDate: Date;
   totalIncome: number;
 }
+
+export interface Count {
+  count: number;
+}
