@@ -1,4 +1,6 @@
-<header class="flex justify-between items-center h-[80px] shadow-md bg-white">
+<header
+  class="flex justify-between items-center h-[80px] shadow-md bg-white px-4"
+>
   <div class="px-4">
     <img src="assets/logoipsum-342.svg" alt="logo" class="w-[150px]" />
   </div>
@@ -27,8 +29,14 @@
   </nav>
 
   <div>
-    <button class="cursor-pointer" (click)="logout()">
+    <button class="cursor-pointer hidden md:block" (click)="logout()">
       <img class="w-10 h-10" src="assets/icon-logout.png" alt="logout" />
+    </button>
+
+    <button class="cursor-pointer md:hidden" (click)="toggleSidebar()">
+      <img class="w-10 h-10" src="assets/icon-menu.png" alt="logout" />
     </button>
   </div>
 </header>
+
+<app-sidebar [isOpen]="isOpen" (isOpenChange)="isOpen = $event"></app-sidebar>

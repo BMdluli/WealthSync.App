@@ -20,8 +20,8 @@ export class CreateStockModalComponent {
 
   stockModel = {
     symbol: '',
-    shares: 0,
-    purchasePrice: 0,
+    shares: '',
+    purchasePrice: '',
   };
 
   constructor(

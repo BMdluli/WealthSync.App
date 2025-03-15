@@ -44,7 +44,7 @@ export class EditSavingsGoalComponent {
         this.goalModel.targetDate = this.formatDate(modalData.targetDate);
         this.id = modalData.id;
 
-        console.log(this.goalModel);
+        console.log(modalData.startDate);
       }
     });
   }
@@ -54,8 +54,12 @@ export class EditSavingsGoalComponent {
       this.loading = true;
       const savingsData = {
         ...this.goalModel,
-        startDate: new Date(this.goalModel.startDate).toISOString(),
-        endDate: new Date(this.goalModel.targetDate).toISOString(),
+        startDate: new Date(
+          this.goalModel.startDate + 'T00:00:00Z'
+        ).toISOString(),
+        targetDate: new Date(
+          this.goalModel.targetDate + 'T00:00:00Z'
+        ).toISOString(),
       };
       this.goalService.updateSavingsGoal(this.id, savingsData).subscribe({
         next: () => {
@@ -77,10 +81,10 @@ export class EditSavingsGoalComponent {
     this.modalService.closeModal('editGoalModal');
   }
 
-  formatDate(dateString: string) {
-    const date = new Date(dateString);
-    const formattedDate = date.toISOString().split('T')[0];
+  formatDate(dateString: string): string {
+    if (!dateString) return '';
 
-    return formattedDate;
+    const date = new Date(dateString);
+    return date.toISOString().split('T')[0];
   }
 }

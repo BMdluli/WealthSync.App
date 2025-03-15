@@ -1,11 +1,12 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
+import { SidebarComponent } from '../sidebar/sidebar.component';
 
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [RouterModule, CommonModule],
+  imports: [RouterModule, CommonModule, SidebarComponent],
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss',
 })
@@ -37,7 +38,12 @@ export class HeaderComponent {
     },
   ];
 
+  isOpen = false;
   constructor(private router: Router) {}
+
+  toggleSidebar() {
+    this.isOpen = !this.isOpen;
+  }
 
   logout() {
     localStorage.removeItem('token');

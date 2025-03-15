@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
-import { RouterModule } from '@angular/router';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Router, RouterModule } from '@angular/router';
+import { AuthService } from '../_services/auth.service';
 
 @Component({
   selector: 'app-sidebar',
@@ -36,9 +37,18 @@ export class SidebarComponent {
       imageUel: 'assets/icon-bar-chart.png',
     },
   ];
-  isCollapsed = false;
+  @Input() isOpen = false;
 
-  toggleCollapsed() {
-    this.isCollapsed = !this.isCollapsed;
+  constructor(private router: Router, private authService: AuthService) {}
+
+  @Output() isOpenChange = new EventEmitter<boolean>();
+
+  closeSidebar() {
+    this.isOpenChange.emit(false);
+  }
+
+  logout() {
+    this.authService.clearToken();
+    this.router.navigate(['login']);
   }
 }
