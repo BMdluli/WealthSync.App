@@ -25,7 +25,6 @@ import { CommonModule } from '@angular/common';
 export class DashboardComponent implements OnInit {
   totalSavings = 0;
   savings: Goal[] = [];
-  budgetItemCount: number = 0;
   budgetItems: Budget[] = [];
   stockTotal: number = 0;
   loading = true;
@@ -45,9 +44,8 @@ export class DashboardComponent implements OnInit {
       savings: this.savingsService.getSavingsGoalLimit(),
       budgetItems: this.budgetService.getbudgetItemsLimit(),
       stocks: this.stockService.getStockPrices(),
-      count: this.budgetService.getbudgetCount(),
     }).subscribe({
-      next: ({ savings, budgetItems, stocks, count }) => {
+      next: ({ savings, budgetItems, stocks }) => {
         this.savings = savings;
         if (Array.isArray(savings)) {
           savings.forEach((item) => {
@@ -61,7 +59,6 @@ export class DashboardComponent implements OnInit {
           this.stockTotal += stock.currentPrice * stock.shares;
         });
 
-        this.budgetItemCount = count.count;
         this.budgetItems = budgetItems;
       },
       error: (err) => {
