@@ -124,7 +124,7 @@ app.UseCors(opt => opt
     .AllowCredentials()
     .AllowAnyHeader()
     .AllowAnyMethod()
-    .WithOrigins("http://localhost:4200", "http://localhost:3000", "https://localhost:3000"));
+    .WithOrigins("http://localhost:4200", "http://localhost:3000", "https://wealth-sync-wine.vercel.app"));
 
 
 app.UseHttpsRedirection();
