@@ -10,6 +10,7 @@ using WealthSync.Data;
 using WealthSync.Models;
 using WealthSync.repository;
 using WealthSync.repository.interfaces;
+using Microsoft.AspNetCore.Builder.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -104,15 +105,10 @@ builder.Services.AddHttpClient();
 builder.Services.AddMemoryCache();
 
 // repos
-// builder.Services.AddScoped<ISavingsRepository, SavingsRepository>();
-// builder.Services.AddScoped<IContributionsRepository, ContributionRepository>();
-// builder.Services.AddScoped<IBudgetCategoryRepository, BudgetCategoryRepository>();
-// builder.Services.AddScoped<IBudgetRepository, BudgetRepository>();
-// builder.Services.AddScoped<IExpenseRepository, ExpenseRepository>();
-// builder.Services.AddScoped<IStockRepository, StockRepository>();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
-builder.Services.Configure<AlphaVantageOptions>(builder.Configuration.GetSection("AlphaVantage"));
+builder.Services.Configure<FmpOptions>(builder.Configuration.GetSection("Fmp"));
+//builder.Services.Configure<AlphaVantageOptions>(builder.Configuration.GetSection("AlphaVantage"));
 
 
 var app = builder.Build();

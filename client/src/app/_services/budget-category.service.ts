@@ -1,12 +1,13 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BudgetCategory } from '../_models/budgetCategory';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class BudgetCategoryService {
-  apiUrl = 'https://localhost:7001/api/BudgetCategory';
+  apiUrl = `${environment.apiUrl}/BudgetCategory`;
 
   constructor(private http: HttpClient) {}
 

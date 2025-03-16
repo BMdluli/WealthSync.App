@@ -1,11 +1,12 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ContributionService {
-  apiUrl = 'https://localhost:7001/api/Contribution';
+  apiUrl = `${environment.apiUrl}/Contribution`;
 
   constructor(private http: HttpClient) {}
 

@@ -3,13 +3,14 @@ import { Injectable } from '@angular/core';
 import { Login } from '../_models/login';
 import { jwtDecode, JwtPayload } from 'jwt-decode';
 import { Observable, of } from 'rxjs';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
   private tokenKey = 'token';
-  private apiUrl = 'https://localhost:7001/api/Auth';
+  private apiUrl = `${environment.apiUrl}/Auth`;
 
   constructor(private http: HttpClient) {}
 

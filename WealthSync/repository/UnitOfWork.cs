@@ -1,6 +1,7 @@
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Options;
 using WealthSync.Data;
+using WealthSync.Models;
 using WealthSync.repository.interfaces;
 
 namespace WealthSync.repository;
@@ -10,7 +11,7 @@ public class UnitOfWork : IUnitOfWork
     private readonly AppDbContext _context;
     private readonly IHttpClientFactory _httpClientFactory;
     private readonly IMemoryCache _cache;
-    private readonly IOptions<AlphaVantageOptions> _options;
+    private readonly IOptions<FmpOptions> _options;
     public IBudgetCategoryRepository BudgetCategory { get; }
     public IBudgetRepository Budget { get; }
     public IContributionsRepository Contribution { get; }
@@ -22,7 +23,7 @@ public class UnitOfWork : IUnitOfWork
         AppDbContext context,
         IHttpClientFactory httpClientFactory,
         IMemoryCache cache,
-        IOptions<AlphaVantageOptions> options
+        IOptions<FmpOptions> options
         )
     {
         _context = context;

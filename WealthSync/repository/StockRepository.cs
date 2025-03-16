@@ -2,13 +2,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
-using System.Net.Http;
-using System.Threading.Tasks;
 using WealthSync.Data;
+using WealthSync.Models;
 
 public class StockRepository : IStockRepository
 {
@@ -22,7 +18,7 @@ public class StockRepository : IStockRepository
         AppDbContext context,
         IHttpClientFactory httpClientFactory,
         IMemoryCache cache,
-        IOptions<AlphaVantageOptions> options)
+        IOptions<FmpOptions> options)
     {
         _context = context;
         _httpClientFactory = httpClientFactory;
@@ -63,81 +59,56 @@ public class StockRepository : IStockRepository
             .ToListAsync();
     }
 
-    public async Task<double> GetCurrentPriceAsync(string symbol)
+    private async Task<(double price, double dividendYield, string name)> FetchStockDataAsync(string symbol)
     {
-        string cacheKey = $"StockPrice:{symbol}";
-        if (_cache.TryGetValue(cacheKey, out double cachedPrice))
+        string cacheKeyPrice = $"StockPrice:{symbol}";
+        string cacheKeyYield = $"DividendYield:{symbol}";
+        string cacheKeyName = $"StockName:{symbol}";
+
+        if (_cache.TryGetValue(cacheKeyPrice, out double cachedPrice) &&
+            _cache.TryGetValue(cacheKeyYield, out double cachedYield) &&
+            _cache.TryGetValue(cacheKeyName, out string cachedName))
         {
-            return cachedPrice;
+            return (cachedPrice, cachedYield, cachedName);
         }
 
         var httpClient = _httpClientFactory.CreateClient();
-        string url = $"https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol={symbol}&apikey={_apiKey}";
-        var response = await httpClient.GetStringAsync(url);
-        var data = JsonConvert.DeserializeObject<AlphaVantageTimeSeriesResponse>(response);
+        string quoteUrl = $"https://financialmodelingprep.com/api/v3/quote/{symbol}?apikey={_apiKey}";
+        var quoteResponse = await httpClient.GetStringAsync(quoteUrl);
+        var quoteData = JsonConvert.DeserializeObject<List<FmpQuoteResponse>>(quoteResponse);
 
-        if (data?.TimeSeriesDaily != null && data.TimeSeriesDaily.Count > 0)
+        if (quoteData != null && quoteData.Count > 0)
         {
-            var latestDate = data.TimeSeriesDaily.Keys.First();
-            string priceString = data.TimeSeriesDaily[latestDate].Close;
+            var quote = quoteData[0];
+            double price = quote.Price;
+            double dividendYield = quote.DividendYield ?? await CalculateDividendYieldAsync(symbol, price);
+            string name = quote.Name ?? "Unknown";
 
-            // Normalize by replacing ',' with '.' to ensure consistent decimal formatting
-            priceString = priceString.Replace(',', '.');
+            _cache.Set(cacheKeyPrice, price, _cacheDuration);
+            _cache.Set(cacheKeyYield, dividendYield, _cacheDuration);
+            _cache.Set(cacheKeyName, name, _cacheDuration);
 
-            // Try parsing the price with the invariant culture
-            if (double.TryParse(priceString, NumberStyles.Any, CultureInfo.InvariantCulture, out double price))
-            {
-                _cache.Set(cacheKey, price, _cacheDuration);
-                return price;
-            }
-            else
-            {
-                // Handle the case where the price cannot be parsed correctly
-                Console.WriteLine($"Error parsing price: {priceString}");
-                return 0;
-            }
+            return (price, dividendYield, name);
         }
-        return 0;
+
+        return (0, 0, "Unknown");
     }
 
+    public async Task<double> GetCurrentPriceAsync(string symbol)
+    {
+        var (price, _, _) = await FetchStockDataAsync(symbol);
+        return price;
+    }
 
     public async Task<double> GetDividendYieldAsync(string symbol)
     {
-        string cacheKey = $"DividendYield:{symbol}";
-        if (_cache.TryGetValue(cacheKey, out double cachedYield))
-        {
-            return cachedYield;
-        }
-
-        var httpClient = _httpClientFactory.CreateClient();
-        string url = $"https://www.alphavantage.co/query?function=OVERVIEW&symbol={symbol}&apikey={_apiKey}";
-        var response = await httpClient.GetStringAsync(url);
-        var data = JsonConvert.DeserializeObject<Dictionary<string, string>>(response);
-
-        if (data != null && data.TryGetValue("DividendYield", out var yieldStr) && double.TryParse(yieldStr, out var yield))
-        {
-            var yieldPercentage = yield * 100;
-            _cache.Set(cacheKey, yieldPercentage, _cacheDuration);
-            return yieldPercentage;
-        }
-        return 0;
+        var (_, dividendYield, _) = await FetchStockDataAsync(symbol);
+        return dividendYield;
     }
 
     public async Task<string> GetStockNameAsync(string symbol)
     {
-        string cacheKey = $"StockName:{symbol}";
-        if (_cache.TryGetValue(cacheKey, out string cachedName))
-        {
-            return cachedName;
-        }
-
-        var httpClient = _httpClientFactory.CreateClient();
-        string url = $"https://www.alphavantage.co/query?function=OVERVIEW&symbol={symbol}&apikey={_apiKey}";
-        var response = await httpClient.GetStringAsync(url);
-        var data = JsonConvert.DeserializeObject<Dictionary<string, string>>(response);
-
-        var name = data != null && data.TryGetValue("Name", out var n) ? n : "Unknown";
-        _cache.Set(cacheKey, name, _cacheDuration);
+        var (_, _, name) = await FetchStockDataAsync(symbol);
         return name;
     }
 
@@ -188,18 +159,18 @@ public class StockRepository : IStockRepository
     {
         return await _context.Stocks.AnyAsync(s => s.Id == id);
     }
-    
-    public async Task<string> GetDividendFrequencyAsync(string symbol)
+
+    public async Task<string> GetDividendFrequencyAsync(string stockSymbol)
     {
-        if (symbol.ToUpper() == "O") return "Monthly";
+        if (stockSymbol.ToUpper() == "O") return "Monthly";
 
         var stock = await _context.Stocks
             .Include(s => s.Dividends)
-            .FirstOrDefaultAsync(s => s.Symbol == symbol);
+            .FirstOrDefaultAsync(s => s.Symbol == stockSymbol);
 
         if (stock != null && stock.Dividends?.Count > 1)
         {
-            var lastFullYear = DateTime.UtcNow.Year - 1; // 2024 as of March 8, 2025
+            var lastFullYear = DateTime.UtcNow.Year - 1; 
             var dates = stock.Dividends
                 .Where(d => d.PaymentDate.Year == lastFullYear)
                 .Select(d => d.PaymentDate)
@@ -217,23 +188,85 @@ public class StockRepository : IStockRepository
         }
         return "Quarterly"; // Default
     }
-    
-    
+
+    private async Task<double> CalculateDividendYieldAsync(string symbol, double price)
+    {
+        string cacheKey = $"DividendHistory:{symbol}";
+        if (_cache.TryGetValue(cacheKey, out double cachedAnnualDividend))
+        {
+            return (cachedAnnualDividend / price) * 100;
+        }
+
+        var httpClient = _httpClientFactory.CreateClient();
+        string dividendUrl = $"https://financialmodelingprep.com/api/v3/historical-price-full/stock_dividend/{symbol}?apikey={_apiKey}";
+        var dividendResponse = await httpClient.GetStringAsync(dividendUrl);
+        var dividendData = JsonConvert.DeserializeObject<FmpDividendResponse>(dividendResponse);
+
+        if (dividendData?.Historical != null && dividendData.Historical.Count >= 4)
+        {
+            // Sum last 4 dividends (assuming quarterly)
+            double annualDividend = dividendData.Historical
+                .Take(4)
+                .Sum(d => d.AdjDividend);
+            _cache.Set(cacheKey, annualDividend, _cacheDuration);
+            return (annualDividend / price) * 100;
+        }
+
+        return 0; // Fallback if insufficient data
+    }
 }
 
-public class AlphaVantageTimeSeriesResponse
+// FMP response model
+public class FmpQuoteResponse
 {
-    [JsonProperty("Time Series (Daily)")]
-    public Dictionary<string, DailyData> TimeSeriesDaily { get; set; }
+    [JsonProperty("symbol")]
+    public string Symbol { get; set; }
+
+    [JsonProperty("price")]
+    public double Price { get; set; }
+
+    [JsonProperty("dividendYield")]
+    public double? DividendYield { get; set; } // Percentage, nullable
+
+    [JsonProperty("name")]
+    public string Name { get; set; }
 }
 
-public class DailyData
+
+public class FmpDividendResponse
 {
-    [JsonProperty("4. close")]
-    public string Close { get; set; }
+    [JsonProperty("symbol")]
+    public string Symbol { get; set; }
+
+    [JsonProperty("historical")]
+    public List<FmpDividendEntry> Historical { get; set; }
 }
 
-public class AlphaVantageOptions
+public class FmpDividendEntry
 {
-    public string ApiKey { get; set; }
+    [JsonProperty("date")]
+    public string Date { get; set; }
+
+    [JsonProperty("dividend")]
+    public double Dividend { get; set; }
+
+    [JsonProperty("adjDividend")] // Adjusted for splits
+    public double AdjDividend { get; set; }
 }
+
+//public class AlphaVantageTimeSeriesResponse
+//{
+//    [JsonProperty("Time Series (Daily)")]
+//    public Dictionary<string, DailyData> TimeSeriesDaily { get; set; }
+//}
+
+//public class DailyData
+//{
+//    [JsonProperty("4. close")]
+//    public string Close { get; set; }
+//}
+
+//public class AlphaVantageOptions
+//{
+//    public string ApiKey { get; set; }
+//}

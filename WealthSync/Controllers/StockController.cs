@@ -42,7 +42,7 @@ public class StockController : ControllerBase
                 currentPrice = stock.StockPrices.OrderByDescending(sp => sp.Timestamp).FirstOrDefault()?.Price ?? 0;
             }
 
-            var dividendYield = await _unitOfWork.Stock.GetDividendYieldAsync(stock.Symbol);
+            var dividendYield = await _unitOfWork.Stock.GetDividendYieldAsync(stock.Symbol); // Now uses FMP
             var dividendFrequency = await _unitOfWork.Stock.GetDividendFrequencyAsync(stock.Symbol);
 
             stockDtos.Add(new StockDto
@@ -54,16 +54,16 @@ public class StockController : ControllerBase
                 PurchasePrice = stock.PurchasePrice,
                 PurchaseDate = stock.PurchaseDate,
                 CurrentPrice = currentPrice,
-                DividendYield = dividendYield,
+                DividendYield = dividendYield, // Directly from FMP as percentage
                 TotalDividends = stock.Dividends.Sum(d => d.Amount * stock.Shares),
-                DividendFrequency = dividendFrequency // Add this
+                DividendFrequency = dividendFrequency
             });
         }
 
         return Ok(stockDtos);
     }
-    
-    
+
+
     [HttpGet("/api/[controller]/prices")]
     public async Task<ActionResult<IEnumerable<StockOnlyDto>>> GetStocksWithoutDividends()
     {
