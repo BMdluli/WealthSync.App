@@ -52,10 +52,19 @@ export class StocksComponent {
     this.stocksService.getStocks().subscribe({
       next: (response) => {
         this.stocks = response;
-        response.map((stock) => {
+
+        this.total = 0;
+        this.gain = 0;
+        this.annualIncome = 0;
+
+        this.stocks.forEach((stock) => {
           this.total += stock.shares * stock.currentPrice;
-          this.gain += stock.currentPrice - stock.purchasePrice;
-          this.annualIncome += stock.currentPrice * stock.dividendYield;
+
+          this.gain +=
+            (stock.currentPrice - stock.purchasePrice) * stock.shares;
+
+          this.annualIncome +=
+            stock.shares * stock.currentPrice * stock.dividendYield;
         });
       },
       error: (err) => {
