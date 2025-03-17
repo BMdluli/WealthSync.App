@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { HeaderComponent } from '../../header/header.component';
-import { SidebarComponent } from '../../sidebar/sidebar.component';
 import { SavingsCardComponent } from '../../savings-card/savings-card.component';
 import { CreateGoalModalComponent } from '../../modals/create-goal-modal/create-goal-modal.component';
 import { ModalService } from '../../_services/modal.service';
@@ -13,7 +12,6 @@ import { LoaderComponent } from '../../loader/loader.component';
   standalone: true,
   imports: [
     HeaderComponent,
-    SidebarComponent,
     SavingsCardComponent,
     CreateGoalModalComponent,
     LoaderComponent,

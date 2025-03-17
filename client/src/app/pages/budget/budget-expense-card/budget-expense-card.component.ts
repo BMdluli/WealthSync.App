@@ -4,7 +4,6 @@ import { ModalService } from '../../../_services/modal.service';
 import { CreateExpenseModalComponent } from '../../../modals/create-expense-modal/create-expense-modal.component';
 import { BudgetCategoryService } from '../../../_services/budget-category.service';
 import { EditBudgetCategoryModalComponent } from '../../../modals/edit-budget-category-modal/edit-budget-category-modal.component';
-import { LoaderComponent } from '../../../loader/loader.component';
 import { RefreshService } from '../../../_services/refresh.service';
 import { SpinnerComponent } from '../../../spinner/spinner.component';
 import { ToastrService } from 'ngx-toastr';
@@ -16,7 +15,6 @@ import { ToastrService } from 'ngx-toastr';
     CommonModule,
     CreateExpenseModalComponent,
     EditBudgetCategoryModalComponent,
-    LoaderComponent,
     SpinnerComponent,
   ],
   templateUrl: './budget-expense-card.component.html',

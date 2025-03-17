@@ -24,7 +24,6 @@ export class EditBudgetCategoryModalComponent {
     allocatedAmount: 0,
   };
 
-  id = this.route.snapshot.paramMap.get('id');
   budgetCategoryId = 0;
 
   constructor(
@@ -36,6 +35,7 @@ export class EditBudgetCategoryModalComponent {
   ) {}
 
   ngOnInit() {
+    let id = this.route.snapshot.paramMap.get('id');
     this.modalService
       .getModalState('editBudgetCategoryModal')
       .subscribe((isOpen) => {
@@ -44,7 +44,7 @@ export class EditBudgetCategoryModalComponent {
           const modalData = this.modalService.getModalData(
             'editBudgetCategoryModal'
           );
-          this.budgetCategoryModel.budgetId = this.id! || '';
+          this.budgetCategoryModel.budgetId = id! || '';
           this.budgetCategoryModel.name = modalData?.name || '';
           this.budgetCategoryModel.allocatedAmount = modalData?.amount || '';
           this.budgetCategoryId = modalData.budgetCategoryId;
