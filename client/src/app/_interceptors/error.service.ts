@@ -8,6 +8,7 @@ export const ErrorInterceptor: HttpInterceptorFn = (req, next) => {
   const router = inject(Router);
   const toaster = inject(ToastrService);
   const ngZone = inject(NgZone); // Ensure UI updates happen in the Angular zone
+  console.log('ErrorInterceptor executing...');
 
   return next(req).pipe(
     catchError((error: HttpErrorResponse) => {
@@ -46,6 +47,7 @@ export const ErrorInterceptor: HttpInterceptorFn = (req, next) => {
               break;
             case 401:
               toaster.error('Unauthorised', error.status.toString());
+              console.log('ERRORROROORO');
               break;
             case 404:
               router.navigateByUrl('/not-found');

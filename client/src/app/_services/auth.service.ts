@@ -44,4 +44,12 @@ export class AuthService {
   loginUser(userData: any) {
     return this.http.post<Login>(`${this.apiUrl}/login`, userData);
   }
+
+  forgotPassword(userData: any) {
+    return this.http.post(`${this.apiUrl}/forgot-password`, userData);
+  }
+
+  resetPassword(userData: any) {
+    return this.http.post(`${this.apiUrl}/reset-password`, userData);
+  }
 }
