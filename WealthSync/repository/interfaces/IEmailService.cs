@@ -1,0 +1,6 @@
+namespace WealthSync.repository.interfaces;
+
+public interface IEmailService
+{
+    Task SendEmailAsync(string to, string subject, string body);
+}

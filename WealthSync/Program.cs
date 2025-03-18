@@ -106,6 +106,7 @@ builder.Services.AddMemoryCache();
 
 // repos
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+builder.Services.AddScoped<IEmailService, EmailService>();
 
 builder.Services.Configure<FmpOptions>(builder.Configuration.GetSection("Fmp"));
 //builder.Services.Configure<AlphaVantageOptions>(builder.Configuration.GetSection("AlphaVantage"));

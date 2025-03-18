@@ -18,5 +18,6 @@ namespace WealthSync.Data
         public DbSet<Stock> Stocks { get; set; }
         public DbSet<Dividend> Dividends { get; set; }
         public DbSet<StockPrice> StockPrices { get; set; }
+        public DbSet<PasswordResetToken> PasswordResetTokens { get; set; }
     }
 }

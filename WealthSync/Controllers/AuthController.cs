@@ -4,10 +4,13 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Text;
+using Microsoft.EntityFrameworkCore;
 using WealthSync.Data;
 using WealthSync.Dtos;
 using WealthSync.Models;
+using WealthSync.repository.interfaces;
 
 namespace WealthSync.Controllers
 {
@@ -18,11 +21,13 @@ namespace WealthSync.Controllers
         private readonly AppDbContext _context;
         private readonly UserManager<AppUser> _userManager;
         private readonly IConfiguration _configuration;
-        public AuthController(AppDbContext context, UserManager<AppUser> userManager, IConfiguration configuration)
+        private readonly IEmailService _emailService;
+        public AuthController(AppDbContext context, UserManager<AppUser> userManager, IConfiguration configuration, IEmailService emailService)
         {
             _context = context;
             _userManager = userManager;
             _configuration = configuration;
+            _emailService = emailService;
         }
 
         [HttpPost("register")]
@@ -76,6 +81,70 @@ namespace WealthSync.Controllers
             
             return Ok(response);
 
+        }
+        
+        [HttpPost("forgot-password")]
+        public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordDto model)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var user = await _userManager.FindByEmailAsync(model.Email);
+            if (user == null)
+                return Ok(); // Don’t reveal user existence for security
+
+            // Generate reset token
+            var token = Convert.ToBase64String(RandomNumberGenerator.GetBytes(32)); // Secure random token
+            var resetToken = new PasswordResetToken
+            {
+                UserId = user.Id,
+                Token = token,
+                ExpiryDate = DateTime.UtcNow.AddHours(1), 
+                IsUsed = false
+            };
+
+            _context.PasswordResetTokens.Add(resetToken);
+            await _context.SaveChangesAsync();
+
+            // Send email
+            var resetUrl = $"{_configuration["FrontendUrl"]}/reset-password?token={Uri.EscapeDataString(token)}&email={Uri.EscapeDataString(model.Email)}";
+            var emailBody = $"<p>Click <a href=\"{resetUrl}\">here</a> to reset your password. This link expires in 1 hour.</p>";
+
+            await _emailService.SendEmailAsync(model.Email, "Reset Your WealthSync Password", emailBody);
+
+            return Ok();
+        }
+        
+        [HttpPost("reset-password")]
+        public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordDto model)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var user = await _userManager.FindByEmailAsync(model.Email);
+            if (user == null)
+                return BadRequest(new { message = "Invalid email or token" });
+
+            var resetToken = await _context.PasswordResetTokens
+                .FirstOrDefaultAsync(t => t.UserId == user.Id && 
+                                          t.Token == model.Token && 
+                                          !t.IsUsed && 
+                                          t.ExpiryDate > DateTime.UtcNow);
+
+            if (resetToken == null)
+                return BadRequest(new { message = "Invalid or expired token" });
+
+            // Update password using Identity
+            var identityToken = await _userManager.GeneratePasswordResetTokenAsync(user);
+            var result = await _userManager.ResetPasswordAsync(user, identityToken, model.NewPassword);
+            if (!result.Succeeded)
+                return BadRequest(new { message = "Password reset failed", errors = result.Errors });
+
+            // Mark token as used
+            resetToken.IsUsed = true;
+            await _context.SaveChangesAsync();
+
+            return Ok(new { message = "Password reset successfully" });
         }
 
 
