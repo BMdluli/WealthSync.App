@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { SpinnerComponent } from '../../spinner/spinner.component';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -21,6 +22,7 @@ export class LoginComponent {
   constructor(
     private authService: AuthService,
     private router: Router,
+    private route: ActivatedRoute,
     private toastr: ToastrService
   ) {}
 
@@ -31,7 +33,11 @@ export class LoginComponent {
         next: (response) => {
           this.authService.setToken(response.token);
           this.toastr.success('Login Successful');
-          this.router.navigate(['dashboard']);
+          // this.router.navigate(['dashboard']);
+
+          const returnUrl =
+            this.route.snapshot.queryParams['returnUrl'] || 'dashboard';
+          this.router.navigateByUrl(returnUrl);
         },
         error: (error) => {
           console.error(error);
