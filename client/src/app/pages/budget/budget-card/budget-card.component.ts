@@ -21,7 +21,7 @@ export class BudgetCardComponent implements OnInit {
   @Input() subTitle: string = '';
   @Input() id: number = 0;
   @Input() isOnDashboard = false;
-
+  
   isEditOpen = false;
 
   constructor(

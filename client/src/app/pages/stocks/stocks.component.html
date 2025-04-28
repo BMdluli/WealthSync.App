@@ -8,6 +8,7 @@
     <button
       class="bg-black text-white h-[40px] px-4 cursor-pointer rounded-sm"
       (click)="openModal()"
+      disabled="stocks.length == 3"
     >
       Add Stock
     </button>
@@ -18,6 +19,38 @@
   } @else if(stocks.length < 1) {
   <p>No stocks yet</p>
   } @else if(stocks.length > 0) {
+
+  <div class="w-full justify-between lg:flex overflow-x-auto mt-4">
+    <ngx-charts-pie-chart
+      [view]="view"
+      [scheme]="colorScheme"
+      [results]="portfolioAllocation"
+      [gradient]="gradient"
+      [legendPosition]="legendPosition"
+      [labels]="showLabels"
+      [doughnut]="isDoughnut"
+      (select)="onSelect($event)"
+      (activate)="onActivate($event)"
+      (deactivate)="onDeactivate($event)"
+    >
+    </ngx-charts-pie-chart>
+
+    <ngx-charts-bar-vertical
+      [view]="view"
+      [scheme]="colorScheme"
+      [results]="annualDividendIncomeData"
+      [gradient]="gradient"
+      [xAxis]="true"
+      [yAxis]="true"
+      [legend]="showLegend"
+      [showXAxisLabel]="true"
+      [showYAxisLabel]="true"
+      [xAxisLabel]="xAxisLabel"
+      [yAxisLabel]="yAxisLabel"
+      (select)="onSelect($event)"
+    >
+    </ngx-charts-bar-vertical>
+  </div>
 
   <!-- TOP SECTION -->
   <div class="flex flex-col md:flex-row md:justify-between gap-4">

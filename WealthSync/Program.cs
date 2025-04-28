@@ -130,6 +130,7 @@ app.UseCors(opt => opt
 
 app.UseHttpsRedirection();
 
+app.UseAuthentication(); 
 app.UseAuthorization();
 
 app.MapControllers();
