@@ -9,15 +9,23 @@ import { forkJoin } from 'rxjs';
 import { LoaderComponent } from '../../loader/loader.component';
 import { StocksService } from '../../_services/stocks.service';
 import { CommonModule } from '@angular/common';
+import {
+  BarChartModule,
+  LineChartModule,
+  PieChartModule,
+} from '@swimlane/ngx-charts';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
   imports: [
+    CommonModule,
     HeaderComponent,
     BudgetCardComponent,
     LoaderComponent,
-    CommonModule,
+    BarChartModule,
+    LineChartModule,
+    PieChartModule,
   ],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss',
@@ -26,8 +34,13 @@ export class DashboardComponent implements OnInit {
   totalSavings = 0;
   savings: Goal[] = [];
   budgetItems: Budget[] = [];
-  stockTotal: number = 0;
+  stockTotal = 0;
   loading = true;
+
+  // Chart Data
+  savingsChartData: any[] = [];
+  budgetChartData: any[] = [];
+  stockChartData: any[] = [];
 
   constructor(
     private savingsService: SavingsService,
@@ -47,19 +60,45 @@ export class DashboardComponent implements OnInit {
     }).subscribe({
       next: ({ savings, budgetItems, stocks }) => {
         this.savings = savings;
-        if (Array.isArray(savings)) {
-          savings.forEach((item) => {
-            if (item && item.currentAmount) {
-              this.totalSavings += item.currentAmount;
-            }
-          });
-        }
-
-        stocks.forEach((stock) => {
-          this.stockTotal += stock.currentPrice * stock.shares;
-        });
-
         this.budgetItems = budgetItems;
+
+        this.totalSavings = savings.reduce(
+          (sum, s) => sum + (s.currentAmount || 0),
+          0
+        );
+
+        // Chart: Savings Progress
+        this.savingsChartData = savings.map((s) => ({
+          name: s.name,
+          value: Math.round((s.currentAmount / s.targetAmount) * 100),
+        }));
+
+        // Chart: Budget Line Chart
+        const sortedBudgets = [...budgetItems].sort(
+          (a, b) =>
+            new Date(a.startDate).getTime() - new Date(b.startDate).getTime()
+        );
+
+        this.budgetChartData = [
+          {
+            name: 'Income',
+            series: sortedBudgets.map((b) => ({
+              name: b.name,
+              value: b.totalIncome,
+            })),
+          },
+        ];
+
+        // Chart: Stock Pie Chart
+        this.stockChartData = stocks.map((stock) => ({
+          name: stock.symbol,
+          value: stock.shares * stock.currentPrice,
+        }));
+
+        this.stockTotal = this.stockChartData.reduce(
+          (sum, s) => sum + s.value,
+          0
+        );
       },
       error: (err) => {
         console.error(err);

@@ -1,14 +1,14 @@
 <app-create-stock-modal></app-create-stock-modal>
 
 <app-header></app-header>
-<div class="flex-1 m-4">
+<div class="flex-1 m-4 max-w-[1200px] md:mx-auto">
   <h1 class="text-2xl md:text-4xl font-bold">Stocks</h1>
 
   <div class="flex justify-end">
     <button
-      class="bg-black text-white h-[40px] px-4 cursor-pointer rounded-sm"
+      class="bg-black text-white h-[40px] px-4 cursor-pointer rounded-sm disabled:bg-gray-500"
       (click)="openModal()"
-      disabled="stocks.length == 3"
+      [disabled]="stocks.length === 3"
     >
       Add Stock
     </button>
@@ -21,33 +21,27 @@
   } @else if(stocks.length > 0) {
 
   <div class="w-full justify-between lg:flex overflow-x-auto mt-4">
-    <div>
-      <h3 class="text-center font-semibold text-xl">Stock Breakdown</h3>
+    <div class="mt-8 w-full">
+      <h3 class="text-xl font-bold mb-2">Stock Breakdown</h3>
       <ngx-charts-pie-chart
-        [view]="view"
-        [scheme]="colorScheme"
+        [scheme]="'vivid'"
         [results]="portfolioAllocation"
-        [gradient]="gradient"
         [legendPosition]="legendPosition"
-        [labels]="showLabels"
-        [doughnut]="isDoughnut"
-        (select)="onSelect($event)"
-        (activate)="onActivate($event)"
-        (deactivate)="onDeactivate($event)"
+        [labels]="true"
+        [doughnut]="true"
+        [explodeSlices]="false"
       >
       </ngx-charts-pie-chart>
     </div>
 
-    <div>
-      <h3 class="text-center font-semibold text-xl">Dividend Yield</h3>
+    <div class="mt-8 w-full">
+      <h3 class="text-xl font-bold mb-2">Dividend Yield</h3>
       <ngx-charts-bar-vertical
-        [view]="view"
-        [scheme]="colorScheme"
+        [scheme]="'cool'"
         [results]="annualDividendIncomeData"
-        [gradient]="gradient"
         [xAxis]="true"
         [yAxis]="true"
-        [legend]="showLegend"
+        [legend]="true"
         [showXAxisLabel]="true"
         [showYAxisLabel]="true"
         [xAxisLabel]="xAxisLabel"

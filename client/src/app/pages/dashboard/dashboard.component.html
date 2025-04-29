@@ -5,7 +5,7 @@
 } @else if(savings.length < 1 && budgetItems.length < 1) {
 <p>Nothing to show yet</p>
 } @else if(savings.length > 0 || budgetItems.length > 0) {
-<div class="m-4">
+<div class="m-4 max-w-[1200px] md:mx-auto">
   <!-- CARD ROW -->
   <div class="grid grid-cols-2 md:grid-cols-3 gap-2 md:gap-4 min-h-[160px]">
     <div class="border-2 border-gray-400 rounded-lg p-2">
@@ -24,6 +24,55 @@
       <img src="/assets/icon-bar-chart.png" alt="stocks" />
       <p class="font-semibold">Stocks</p>
       <p class="font-bold">{{ stockTotal | currency }}</p>
+    </div>
+  </div>
+
+  <div>
+    <!-- Budget Income Over Time -->
+    <div class="mt-8 w-full min-h-[500px] lg:min-h-[300px] overflow-x-auto">
+      <h2 class="text-xl font-bold mb-2">Budget Income Over Time</h2>
+      <ngx-charts-line-chart
+        [results]="budgetChartData"
+        [scheme]="'cool'"
+        [xAxis]="true"
+        [yAxis]="true"
+        [legend]="false"
+        [autoScale]="true"
+        [timeline]="true"
+      ></ngx-charts-line-chart>
+    </div>
+
+    <div
+      class="flex flex-col lg:flex-row justify-between overflow-x-auto w-full"
+    >
+      <!-- Savings Progress -->
+      <div class="mt-8 w-full">
+        <h2 class="text-xl font-bold mb-2">Savings Progress</h2>
+        <ngx-charts-bar-vertical
+          [results]="savingsChartData"
+          [scheme]="'vivid'"
+          [xAxis]="true"
+          [yAxis]="true"
+          [legend]="false"
+          [xAxisLabel]="'Goal'"
+          [yAxisLabel]="'Progress (%)'"
+          [roundDomains]="true"
+          [barPadding]="8"
+        ></ngx-charts-bar-vertical>
+      </div>
+
+      <!-- Stock Portfolio Distribution -->
+      <div class="mt-8 w-full">
+        <h2 class="text-xl font-bold mb-2">Stock Portfolio Distribution</h2>
+        <ngx-charts-pie-chart
+          [results]="stockChartData"
+          [legend]="true"
+          [labels]="true"
+          [doughnut]="true"
+          [scheme]="'vivid'"
+          [explodeSlices]="false"
+        ></ngx-charts-pie-chart>
+      </div>
     </div>
   </div>
 
