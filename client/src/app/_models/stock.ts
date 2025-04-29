@@ -7,4 +7,5 @@ export interface Stock {
   purchasePrice: number;
   shares: number;
   symbol: string;
+  dividendFrequency: string;
 }

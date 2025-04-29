@@ -8,6 +8,7 @@ import { ModalService } from '../../_services/modal.service';
 import { CreateStockModalComponent } from '../../modals/create-stock-modal/create-stock-modal.component';
 import { LoaderComponent } from '../../loader/loader.component';
 import { ToastrService } from 'ngx-toastr';
+import { PieChartModule, BarChartModule } from '@swimlane/ngx-charts';
 
 @Component({
   selector: 'app-stocks',
@@ -18,16 +19,22 @@ import { ToastrService } from 'ngx-toastr';
     CommonModule,
     CreateStockModalComponent,
     LoaderComponent,
+    PieChartModule,
+    BarChartModule,
   ],
   templateUrl: './stocks.component.html',
   styleUrl: './stocks.component.scss',
 })
 export class StocksComponent {
   stocks: Stock[] = [];
+  portfolioAllocation: any[] = [];
+  annualDividendIncomeData: any[] = [];
   total: number = 0;
   gain: number = 0;
   annualIncome: number = 0;
   isLoading = false;
+  xAxisLabel = 'Stock';
+  yAxisLabel = 'Percentage';
 
   isModalOpen = false;
 
@@ -66,6 +73,7 @@ export class StocksComponent {
           this.annualIncome +=
             stock.shares * stock.currentPrice * stock.dividendYield;
         });
+        this.prepareChartData();
       },
       error: (err) => {
         this.isLoading = false;
@@ -119,5 +127,48 @@ export class StocksComponent {
     if (frequency === 'Semi-Annually') return 2;
 
     return 4;
+  }
+
+  prepareChartData() {
+    // Prepare data for the portfolio allocation donut chart
+    this.portfolioAllocation = this.stocks.map((stock) => ({
+      name: stock.symbol,
+      value: stock.shares * stock.currentPrice,
+    }));
+
+    // Prepare data for the annual dividend income bar chart
+    this.annualDividendIncomeData = this.stocks.map((stock) => ({
+      name: stock.symbol,
+      value:
+        stock.shares *
+        stock.currentPrice *
+        stock.dividendYield *
+        this.getFrequency(stock.dividendFrequency),
+    }));
+  }
+
+  view: [number, number] = [700, 400];
+
+  // options
+  gradient: boolean = true;
+  showLegend: boolean = true;
+  showLabels: boolean = true;
+  isDoughnut: boolean = false;
+  legendPosition: any = 'below';
+
+  colorScheme: any = {
+    domain: ['#4682B4', '#6495ED', '#008080', '#3CB371', '#8FBC8F'],
+  };
+
+  onSelect(data: any): void {
+    console.log('Item clicked', JSON.parse(JSON.stringify(data)));
+  }
+
+  onActivate(data: any): void {
+    console.log('Activate', JSON.parse(JSON.stringify(data)));
+  }
+
+  onDeactivate(data: any): void {
+    console.log('Deactivate', JSON.parse(JSON.stringify(data)));
   }
 }
