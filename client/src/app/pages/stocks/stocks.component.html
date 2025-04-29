@@ -21,35 +21,41 @@
   } @else if(stocks.length > 0) {
 
   <div class="w-full justify-between lg:flex overflow-x-auto mt-4">
-    <ngx-charts-pie-chart
-      [view]="view"
-      [scheme]="colorScheme"
-      [results]="portfolioAllocation"
-      [gradient]="gradient"
-      [legendPosition]="legendPosition"
-      [labels]="showLabels"
-      [doughnut]="isDoughnut"
-      (select)="onSelect($event)"
-      (activate)="onActivate($event)"
-      (deactivate)="onDeactivate($event)"
-    >
-    </ngx-charts-pie-chart>
+    <div>
+      <h3 class="text-center font-semibold text-xl">Stock Breakdown</h3>
+      <ngx-charts-pie-chart
+        [view]="view"
+        [scheme]="colorScheme"
+        [results]="portfolioAllocation"
+        [gradient]="gradient"
+        [legendPosition]="legendPosition"
+        [labels]="showLabels"
+        [doughnut]="isDoughnut"
+        (select)="onSelect($event)"
+        (activate)="onActivate($event)"
+        (deactivate)="onDeactivate($event)"
+      >
+      </ngx-charts-pie-chart>
+    </div>
 
-    <ngx-charts-bar-vertical
-      [view]="view"
-      [scheme]="colorScheme"
-      [results]="annualDividendIncomeData"
-      [gradient]="gradient"
-      [xAxis]="true"
-      [yAxis]="true"
-      [legend]="showLegend"
-      [showXAxisLabel]="true"
-      [showYAxisLabel]="true"
-      [xAxisLabel]="xAxisLabel"
-      [yAxisLabel]="yAxisLabel"
-      (select)="onSelect($event)"
-    >
-    </ngx-charts-bar-vertical>
+    <div>
+      <h3 class="text-center font-semibold text-xl">Dividend Yield</h3>
+      <ngx-charts-bar-vertical
+        [view]="view"
+        [scheme]="colorScheme"
+        [results]="annualDividendIncomeData"
+        [gradient]="gradient"
+        [xAxis]="true"
+        [yAxis]="true"
+        [legend]="showLegend"
+        [showXAxisLabel]="true"
+        [showYAxisLabel]="true"
+        [xAxisLabel]="xAxisLabel"
+        [yAxisLabel]="yAxisLabel"
+        (select)="onSelect($event)"
+      >
+      </ngx-charts-bar-vertical>
+    </div>
   </div>
 
   <!-- TOP SECTION -->
@@ -119,13 +125,13 @@
           </td>
           <td class="px-6 py-4">{{ stock.dividendYield.toFixed(2) }}</td>
           <td class="px-6 py-4">
-            <button
+            <!-- <button
               href="#"
               class="h-6 w-6 ml-2 cursor-pointer"
               (click)="deleteStock(stock.id)"
             >
               <img src="assets/icon-edit.png" alt="edit" />
-            </button>
+            </button> -->
             <button
               href="#"
               class="h-6 w-6 ml-2 cursor-pointer"
