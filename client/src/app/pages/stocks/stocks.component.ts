@@ -146,14 +146,10 @@ export class StocksComponent {
   view: [number, number] = [700, 400];
 
   // options
-  gradient: boolean = true;
-  showLegend: boolean = true;
-  showLabels: boolean = true;
-  isDoughnut: boolean = false;
   legendPosition: any = 'below';
 
   colorScheme: any = {
-    domain: ['#4682B4', '#6495ED', '#008080', '#3CB371', '#8FBC8F'],
+    domain: ['#4FCD55', '#217FFA', '#FE5F00', '#FEB903'],
   };
 
   onSelect(data: any): void {
