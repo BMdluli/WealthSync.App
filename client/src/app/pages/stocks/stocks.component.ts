@@ -139,11 +139,7 @@ export class StocksComponent {
     // Prepare data for the annual dividend income bar chart
     this.annualDividendIncomeData = this.stocks.map((stock) => ({
       name: stock.symbol,
-      value:
-        stock.shares *
-        stock.currentPrice *
-        stock.dividendYield *
-        this.getFrequency(stock.dividendFrequency),
+      value: stock.dividendYield,
     }));
   }
 
