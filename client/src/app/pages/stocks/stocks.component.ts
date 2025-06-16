@@ -71,7 +71,7 @@ export class StocksComponent {
             (stock.currentPrice - stock.purchasePrice) * stock.shares;
 
           this.annualIncome +=
-            stock.shares * stock.currentPrice * stock.dividendYield;
+            stock.shares * (stock.currentPrice * (stock.dividendYield / 100));
         });
         this.prepareChartData();
       },
