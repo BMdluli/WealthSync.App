@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using WealthSync.Data;
 using WealthSync.Dtos;
 using WealthSync.Models;
-using WealthSync.repository.interfaces;
+using WealthSync.Application.interfaces;
 
 namespace WealthSync.Controllers
 {

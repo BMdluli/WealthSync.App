@@ -1,8 +1,8 @@
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Options;
+using WealthSync.Application.interfaces;
 using WealthSync.Data;
 using WealthSync.Models;
-using WealthSync.repository.interfaces;
 
 namespace WealthSync.repository;
 

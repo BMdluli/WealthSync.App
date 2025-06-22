@@ -1,7 +1,7 @@
 using WealthSync.Data;
 using WealthSync.Dtos;
 
-namespace WealthSync.repository.interfaces;
+namespace WealthSync.Application.interfaces;
 
 public interface IContributionsRepository : IRepository<Contribution>
 {

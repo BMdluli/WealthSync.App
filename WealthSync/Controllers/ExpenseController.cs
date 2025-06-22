@@ -4,11 +4,11 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using WealthSync.Application.interfaces;
 using WealthSync.Controllers;
 using WealthSync.Data;
 using WealthSync.Dtos;
 using WealthSync.Models;
-using WealthSync.repository.interfaces;
 
 
 [Route("api/[controller]")]

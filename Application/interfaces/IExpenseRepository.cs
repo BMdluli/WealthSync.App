@@ -1,9 +1,6 @@
-using Microsoft.AspNetCore.Mvc;
-using WealthSync.Controllers;
-using WealthSync.Dtos;
 using WealthSync.Models;
 
-namespace WealthSync.repository.interfaces;
+namespace WealthSync.Application.interfaces;
 
 public interface IExpenseRepository : IRepository<Expense>
 {

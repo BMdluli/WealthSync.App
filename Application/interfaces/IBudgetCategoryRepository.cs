@@ -1,6 +1,6 @@
 using WealthSync.Models;
 
-namespace WealthSync.repository.interfaces;
+namespace WealthSync.Application.interfaces;
 
 public interface IBudgetCategoryRepository : IRepository<BudgetCategory>
 {

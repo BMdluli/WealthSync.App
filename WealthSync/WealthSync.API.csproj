@@ -21,4 +21,10 @@
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Application\WealthSync.Application.csproj" />
+    <ProjectReference Include="..\Domain\WealthSync.Domain.csproj" />
+    <ProjectReference Include="..\Infrastructure\WealthSync.Infrastructure.csproj" />
+  </ItemGroup>
+
 </Project>

@@ -1,6 +1,7 @@
+using Microsoft.Extensions.Configuration;
 using System.Net;
 using System.Net.Mail;
-using WealthSync.repository.interfaces;
+using WealthSync.Application.interfaces;
 
 namespace WealthSync.repository;
 
