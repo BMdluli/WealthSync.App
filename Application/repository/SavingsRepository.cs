@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
-
+using WealthSync.Application.interfaces;
 using WealthSync.Data;
-using WealthSync.repository.interfaces;
 
 public class SavingsRepository : ISavingsRepository
 {

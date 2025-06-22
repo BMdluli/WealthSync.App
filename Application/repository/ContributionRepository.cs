@@ -2,8 +2,8 @@ using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using WealthSync.Application.interfaces;
 using WealthSync.Data;
-using WealthSync.repository.interfaces;
 
 public class ContributionRepository : IContributionsRepository
 {

@@ -1,9 +1,9 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using WealthSync.Application.interfaces;
 using WealthSync.Dtos;
 using WealthSync.Models;
-using WealthSync.repository.interfaces;
 
 
 namespace WealthSync.Controllers;

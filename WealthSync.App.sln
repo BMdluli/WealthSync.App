@@ -1,9 +1,15 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.12.35728.132 d17.12
+VisualStudioVersion = 17.12.35728.132
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WealthSync", "WealthSync\WealthSync.csproj", "{D4B7E0C7-63C4-42DD-B9FE-F60988EA02A4}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WealthSync.API", "WealthSync\WealthSync.API.csproj", "{D4B7E0C7-63C4-42DD-B9FE-F60988EA02A4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WealthSync.Application", "Application\WealthSync.Application.csproj", "{4E879980-642E-4A66-A206-15973C89E711}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WealthSync.Domain", "Domain\WealthSync.Domain.csproj", "{B9CE4830-E576-4CA3-8B48-6EF0F47F6DF0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WealthSync.Infrastructure", "Infrastructure\WealthSync.Infrastructure.csproj", "{CEE6DDA3-4CE2-47A7-A705-17AA222FDD96}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,8 +21,23 @@ Global
 		{D4B7E0C7-63C4-42DD-B9FE-F60988EA02A4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D4B7E0C7-63C4-42DD-B9FE-F60988EA02A4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D4B7E0C7-63C4-42DD-B9FE-F60988EA02A4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4E879980-642E-4A66-A206-15973C89E711}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4E879980-642E-4A66-A206-15973C89E711}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4E879980-642E-4A66-A206-15973C89E711}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4E879980-642E-4A66-A206-15973C89E711}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B9CE4830-E576-4CA3-8B48-6EF0F47F6DF0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B9CE4830-E576-4CA3-8B48-6EF0F47F6DF0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B9CE4830-E576-4CA3-8B48-6EF0F47F6DF0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B9CE4830-E576-4CA3-8B48-6EF0F47F6DF0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CEE6DDA3-4CE2-47A7-A705-17AA222FDD96}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CEE6DDA3-4CE2-47A7-A705-17AA222FDD96}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CEE6DDA3-4CE2-47A7-A705-17AA222FDD96}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CEE6DDA3-4CE2-47A7-A705-17AA222FDD96}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {55E12B03-7FB0-40C0-B231-9890824B1B63}
 	EndGlobalSection
 EndGlobal

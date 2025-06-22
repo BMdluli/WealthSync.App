@@ -1,11 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Linq;
-using System.Threading.Tasks;
+using WealthSync.Application.interfaces;
 using WealthSync.Data;
-using WealthSync.repository.interfaces;
 
 
 [Route("api/[controller]")]

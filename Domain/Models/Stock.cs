@@ -1,5 +1,5 @@
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Microsoft.Build.Framework;
 using WealthSync.Data;
 using WealthSync.Models;
 

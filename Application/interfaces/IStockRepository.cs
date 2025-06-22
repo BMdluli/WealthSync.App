@@ -1,6 +1,6 @@
 
+using WealthSync.Application.interfaces;
 using WealthSync.Data;
-using WealthSync.repository.interfaces;
 
 public interface IStockRepository : IRepository<Stock>
 {
