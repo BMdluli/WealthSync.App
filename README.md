@@ -2,7 +2,7 @@
 
 ![home](https://github.com/user-attachments/assets/b8b4e4b0-37da-4808-a45f-54224a64dfd8)
 <img width="1680" alt="Screenshot 2025-04-29 at 12 52 52" src="https://github.com/user-attachments/assets/db211035-0188-42c1-b7d4-d03708d844d1" />
-<img width="1680" alt="Screenshot 2025-04-29 at 13 00 07" src="https://github.com/user-attachments/assets/6124c6aa-abd9-434f-a196-a3f9e52119c2" />
+![Stocks Page](https://github.com/user-attachments/assets/8a2d2696-b3ce-4163-badf-f4dc14dcb139)
 
 
 **WealthSync** is a personal finance management application designed to help users track their budgets, savings, and stock investments. It features a secure backend built with ASP.NET Core, a responsive Angular frontend, and integrates with Financial Modeling Prep (FMP) for real-time stock data, including adjusted dividend yields. The app supports user authentication with JWT, budget management, and stock portfolio tracking with a limit of 3 stocks per user.
