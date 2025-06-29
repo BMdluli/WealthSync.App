@@ -101,8 +101,15 @@
         <tr class="odd:bg-white even:bg-gray-50 border-b border-gray-200">
           <th
             scope="row"
-            class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap"
+            class="flex gap-2 px-6 py-4 font-medium text-gray-900 whitespace-nowrap"
           >
+            <img
+              class="h-6 w-6"
+              src="https://images.financialmodelingprep.com/symbol/{{
+                stock.symbol
+              }}.png"
+              alt="{{ stock.name }}"
+            />
             {{ stock.name }}
           </th>
           <td class="px-6 py-4">{{ stock.shares }}</td>
