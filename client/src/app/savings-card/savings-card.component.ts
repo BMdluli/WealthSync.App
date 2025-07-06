@@ -6,6 +6,7 @@ import { SavingsService } from '../_services/savings.service';
 import { AddContributionModalComponent } from '../modals/add-contribution-modal/add-contribution-modal.component';
 import { ModalService } from '../_services/modal.service';
 import { EditSavingsGoalComponent } from '../modals/edit-savings-goal/edit-savings-goal.component';
+import { RefreshService } from '../_services/refresh.service';
 
 @Component({
   selector: 'app-savings-card',
@@ -45,7 +46,8 @@ export class SavingsCardComponent {
 
   constructor(
     private savingsService: SavingsService,
-    private modalService: ModalService
+    private modalService: ModalService,
+    private refreshService: RefreshService
   ) {}
 
   ngOnInit(): void {
@@ -85,6 +87,7 @@ export class SavingsCardComponent {
   deleteGoal() {
     this.savingsService.deleteSavingsGoal(this.goal.id).subscribe({
       next: (_) => {
+        this.refreshService.refreshPage();
         console.log('Goal deleted successfully');
       },
       error: (err) => console.error(err),
